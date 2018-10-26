@@ -1,8 +1,9 @@
 from flask import current_app as app
 from flask import render_template
-from server.models import User
 
+# renders index.html
 @app.route('/')
+@app.route('/admin')
 def index():
 
     return render_template('index.html')
