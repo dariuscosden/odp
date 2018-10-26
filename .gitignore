@@ -22,4 +22,4 @@ confige.py
 
 checklist.txt
 
-static/node_modules/
+node_modules/
