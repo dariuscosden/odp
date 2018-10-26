@@ -15,12 +15,7 @@ export default class Header extends React.Component {
               <h1>Ouate de phoque</h1>
             </div>
             <div className="headerContainer-menu">
-              <a href="">Link1</a>
-              {isLoggedIn ? (
-                <a href={this.props.userURL}>{this.props.user}</a>
-              ) : (
-                <a href="">Login</a>
-              )}
+              {isLoggedIn ? <a href="/admin">Admin</a> : false}
             </div>
           </div>
         </div>
