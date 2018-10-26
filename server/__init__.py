@@ -1,5 +1,8 @@
 from flask import Flask
 from config import DevelopmentConfig
+from server.database import db
+from server.models import User
+from server import testData
 
 def create_app():
 
@@ -9,8 +12,17 @@ def create_app():
     # configuration
     app.config.from_object(DevelopmentConfig)
 
+    # database
+    with app.app_context():
+        db.init_app(app)
+        db.create_all()
+
     # views
     with app.app_context():
         from server import views
+
+    # populates test database entries
+    with app.app_context():
+        testData.populate()
 
     return app

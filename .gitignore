@@ -21,3 +21,5 @@ confige.py
 .vscode/
 
 checklist.txt
+
+static/node_modules/

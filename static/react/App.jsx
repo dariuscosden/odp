@@ -1,8 +1,23 @@
-import React, { Component } from "react";
-import ReactDOM from "react-dom";
+import React, { Component } from 'react';
+import ReactDOM from 'react-dom';
+import Header from './Header';
 
 export default class App extends React.Component {
-    render () {
-        return <h1>Hello World!</h1>;
-    }
+  constructor(props) {
+    super(props);
+    this.state = {
+      isLoggedIn: false,
+      user: false,
+      userURL: false
+    };
+  }
+  render() {
+    return (
+      <Header
+        isLoggedIn={this.state.isLoggedIn}
+        user={this.state.user}
+        userURL={this.state.userURL}
+      />
+    );
+  }
 }
