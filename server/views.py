@@ -2,6 +2,7 @@ from flask import current_app as app
 from flask import render_template, redirect, request, url_for, flash, session
 from werkzeug.security import check_password_hash
 from server.models import User
+import json
 
 # renders index.html
 @app.route('/')
@@ -10,24 +11,25 @@ def index():
 
     # handles login
     if request.method == 'POST':
-        _username = request.form['username']
-        _password = request.form['password']
-        message = ''
+        data = request.get_json()
+        _username = data['formInput'].get('username')
+        _password = data['formInput'].get('password')
 
-        if not _username:
-            message = 'Please enter your username'
-        elif not _password:
-            message = 'Please enter your password'
-        else:
-            user = User.query.filter_by(username=_username).first()
+        user = User.query.filter_by(username=_username).first()
+
+        if user:
             if check_password_hash(user.password, _password):
                 session['user_id'] = user.id
-                message = 'Logged In!'
+                return json.dumps({
+                    'authenticated': True,
+                    'username': user.username,
+                    'password': user.password
+                    })
             else:
-                message = 'Incorrect password'
+                return json.dumps({'authenticated': False})
+        else:
+            return json.dumps({'authenticated': False})
 
-            flash(message)
-            return redirect(url_for('index'))
 
     return render_template('index.html')
 

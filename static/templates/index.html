@@ -21,15 +21,6 @@
         <!-- react is built here -->
     </div>
 
-    {% with messages = get_flashed_messages() %}
-    {% if messages %}
-    {% for message in messages %}
-    {{ message }}
-    {% endfor %}
-    {% endif %}
-    {% endwith %}
-
-
     <!-- scripts -->
     <script src='{{ url_for('static', filename='js/bundle.js') }}'></script>
 </body>

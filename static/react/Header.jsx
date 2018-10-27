@@ -7,9 +7,9 @@ class Header extends React.Component {
     super(props);
   }
   render() {
-    const isLoggedIn = this.props.isLoggedIn;
+    const user = this.props.user;
     let menuLinks;
-    if (isLoggedIn) {
+    if (user) {
       menuLinks = (
         <>
           <a href="/admin">Admin</a>

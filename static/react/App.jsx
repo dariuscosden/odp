@@ -9,50 +9,57 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      isLoggedIn: false,
-      username: false,
-      password: false
+      user: false
     };
   }
 
   componentDidMount() {
     // checks for loggedInState
-    const loggedInState = localStorage.getItem('loggedInState');
-    if (loggedInState) {
-      try {
-        this.setState(JSON.parse(loggedInState));
-      } catch (e) {
-        console.log(e);
-      }
-    }
+    // const loggedInState = localStorage.getItem('loggedInState');
+    // if (loggedInState) {
+    //   try {
+    //     this.setState(JSON.parse(loggedInState));
+    //   } catch (e) {
+    //     console.log(e);
+    //   }
+    // }
   }
 
   // handles the login
   handleLogin = e => {
     e.preventDefault();
+    const formInput = {};
+
+    e.target.childNodes.forEach(function(event) {
+      if (event.tagName === 'INPUT' && event.type != 'submit')
+        formInput[event.name] = event.value;
+      event.value = null;
+    });
+
+    console.log(formInput);
 
     // sends data to python
     var path = window.location.href;
-    axios
-      .post(path, {
-        username: 'Fred',
-        password: 'Flintstone'
-      })
-      .then(function(response) {
-        console.log(response);
+    axios({
+      method: 'post',
+      url: path,
+      data: { formInput }
+    })
+      .then(response => {
+        if (response.data.authenticated)
+          this.setState({
+            user: { authenticated: true, username: response.data.username }
+          });
       })
       .catch(function(error) {
         console.log(error);
       });
-
-    this.setState({ isLoggedIn: true });
-    localStorage.setItem('loggedInState', JSON.stringify(this.state));
   };
 
   // handles the logout
   handleLogout = e => {
     e.preventDefault();
-    this.setState({ isLoggedIn: false });
+    this.setState({ user: false });
     localStorage.setItem('loggedInState', JSON.stringify(this.state));
   };
 
@@ -63,17 +70,14 @@ class App extends React.Component {
     if (path.indexOf('admin') > -1) {
       components = (
         <React.Fragment>
-          <Header
-            isLoggedIn={this.state.isLoggedIn}
-            onLogout={this.handleLogout}
-          />
+          <Header user={this.state.user} onLogout={this.handleLogout} />
           <Login onSubmit={this.handleLogin} />
         </React.Fragment>
       );
     } else {
       components = (
         <React.Fragment>
-          <Header isLoggedIn={this.state.isLoggedIn} />
+          <Header user={this.state.user} />
         </React.Fragment>
       );
     }
