@@ -3,13 +3,58 @@ import ReactDOM from 'react-dom';
 import Header from './Header';
 import Login from './Login';
 
-export default class App extends React.Component {
+const axios = require('axios');
+
+class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      isLoggedIn: false
+      isLoggedIn: false,
+      username: false,
+      password: false
     };
   }
+
+  componentDidMount() {
+    // checks for loggedInState
+    const loggedInState = localStorage.getItem('loggedInState');
+    if (loggedInState) {
+      try {
+        this.setState(JSON.parse(loggedInState));
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  }
+
+  // handles the login
+  handleLogin = e => {
+    e.preventDefault();
+
+    // sends data to python
+    var path = window.location.href;
+    axios
+      .post(path, {
+        username: 'Fred',
+        password: 'Flintstone'
+      })
+      .then(function(response) {
+        console.log(response);
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+
+    this.setState({ isLoggedIn: true });
+    localStorage.setItem('loggedInState', JSON.stringify(this.state));
+  };
+
+  // handles the logout
+  handleLogout = e => {
+    e.preventDefault();
+    this.setState({ isLoggedIn: false });
+    localStorage.setItem('loggedInState', JSON.stringify(this.state));
+  };
 
   render() {
     // checks for admin dashboard
@@ -20,20 +65,15 @@ export default class App extends React.Component {
         <React.Fragment>
           <Header
             isLoggedIn={this.state.isLoggedIn}
-            user={this.state.user}
-            userURL={this.state.userURL}
+            onLogout={this.handleLogout}
           />
-          <Login />
+          <Login onSubmit={this.handleLogin} />
         </React.Fragment>
       );
     } else {
       components = (
         <React.Fragment>
-          <Header
-            isLoggedIn={this.state.isLoggedIn}
-            user={this.state.user}
-            userURL={this.state.userURL}
-          />
+          <Header isLoggedIn={this.state.isLoggedIn} />
         </React.Fragment>
       );
     }
@@ -41,3 +81,5 @@ export default class App extends React.Component {
     return components;
   }
 }
+
+export default App;

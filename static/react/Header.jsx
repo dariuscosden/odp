@@ -1,12 +1,24 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
+import Logout from './Logout';
 
-export default class Header extends React.Component {
+class Header extends React.Component {
   constructor(props) {
     super(props);
   }
   render() {
     const isLoggedIn = this.props.isLoggedIn;
+    let menuLinks;
+    if (isLoggedIn) {
+      menuLinks = (
+        <>
+          <a href="/admin">Admin</a>
+          <Logout onLogout={this.props.onLogout} />
+        </>
+      );
+    } else {
+      menuLinks = false;
+    }
     return (
       <div className="headerContainer">
         <div className="container">
@@ -14,12 +26,12 @@ export default class Header extends React.Component {
             <div className="headerContainer-logo">
               <h1>Ouate de phoque</h1>
             </div>
-            <div className="headerContainer-menu">
-              {isLoggedIn ? <a href="/admin">Admin</a> : false}
-            </div>
+            <div className="headerContainer-menu">{menuLinks}</div>
           </div>
         </div>
       </div>
     );
   }
 }
+
+export default Header;

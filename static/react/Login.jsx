@@ -1,18 +1,24 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 
-export default class Login extends React.Component {
+class Login extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
   render() {
     return (
       <div className="container">
-        <form method="POST">
-          <label for="username">Username</label>
+        <form method="POST" onSubmit={this.props.onSubmit}>
+          <label htmlFor="username">Username</label>
           <input type="text" name="username" />
-          <label for="password">Password</label>
+          <label htmlFor="password">Password</label>
           <input type="text" name="password" />
-          <input type="submit" value="Login" />
+          <input onClick={this.props.onClick} type="submit" value="Login" />
         </form>
       </div>
     );
   }
 }
+
+export default Login;
