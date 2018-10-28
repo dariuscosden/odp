@@ -12,7 +12,7 @@ class Header extends React.Component {
     if (user) {
       menuLinks = (
         <>
-          <a href="/admin">Admin</a>
+          <a href="/admin">Dashboard</a>
           <Logout onLogout={this.props.onLogout} />
         </>
       );

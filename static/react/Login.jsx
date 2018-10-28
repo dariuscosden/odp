@@ -15,6 +15,10 @@ class Login extends React.Component {
           <label htmlFor="password">Password</label>
           <input type="text" name="password" />
           <input onClick={this.props.onClick} type="submit" value="Login" />
+          <br />
+          {this.props.error.type == 'login' ? (
+            <span className="errorMessage">{this.props.error.message}</span>
+          ) : null}
         </form>
       </div>
     );

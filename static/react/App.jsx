@@ -9,34 +9,33 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      user: false
+      user: false,
+      error: false
     };
   }
 
   componentDidMount() {
-    // checks for loggedInState
-    // const loggedInState = localStorage.getItem('loggedInState');
-    // if (loggedInState) {
-    //   try {
-    //     this.setState(JSON.parse(loggedInState));
-    //   } catch (e) {
-    //     console.log(e);
-    //   }
-    // }
+    // checks for user
+    const userState = localStorage.getItem('userState');
+    if (userState) {
+      try {
+        this.setState({ user: userState });
+      } catch (e) {
+        // console.log(e);
+      }
+    }
   }
 
   // handles the login
   handleLogin = e => {
     e.preventDefault();
     const formInput = {};
-
     e.target.childNodes.forEach(function(event) {
-      if (event.tagName === 'INPUT' && event.type != 'submit')
+      if (event.tagName === 'INPUT' && event.type != 'submit') {
         formInput[event.name] = event.value;
-      event.value = null;
+        event.value = null;
+      }
     });
-
-    console.log(formInput);
 
     // sends data to python
     var path = window.location.href;
@@ -46,10 +45,17 @@ class App extends React.Component {
       data: { formInput }
     })
       .then(response => {
-        if (response.data.authenticated)
+        if (response.data.authenticated) {
           this.setState({
-            user: { authenticated: true, username: response.data.username }
+            user: { authenticated: true, username: response.data.username },
+            error: false
           });
+          localStorage.setItem('userState', this.state.user);
+        } else {
+          this.setState({
+            error: { type: 'login', message: 'Incorrect username or password' }
+          });
+        }
       })
       .catch(function(error) {
         console.log(error);
@@ -60,7 +66,7 @@ class App extends React.Component {
   handleLogout = e => {
     e.preventDefault();
     this.setState({ user: false });
-    localStorage.setItem('loggedInState', JSON.stringify(this.state));
+    localStorage.clear();
   };
 
   render() {
@@ -69,16 +75,18 @@ class App extends React.Component {
     let components;
     if (path.indexOf('admin') > -1) {
       components = (
-        <React.Fragment>
+        <>
           <Header user={this.state.user} onLogout={this.handleLogout} />
-          <Login onSubmit={this.handleLogin} />
-        </React.Fragment>
+          {this.state.user ? null : (
+            <Login onSubmit={this.handleLogin} error={this.state.error} />
+          )}
+        </>
       );
     } else {
       components = (
-        <React.Fragment>
+        <>
           <Header user={this.state.user} />
-        </React.Fragment>
+        </>
       );
     }
 
