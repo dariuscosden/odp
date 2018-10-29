@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import Header from './Header';
-import Login from './Login';
+import Login, { Logout } from './Auth';
 
 const axios = require('axios');
 
-class App extends React.Component {
+// admin global component
+class Admin extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -15,8 +16,9 @@ class App extends React.Component {
   }
 
   componentDidMount() {
+    // localStorage.clear();
     // checks for user
-    const userState = localStorage.getItem('userState');
+    const userState = JSON.parse(localStorage.getItem('userState'));
     if (userState) {
       try {
         this.setState({ user: userState });
@@ -37,6 +39,8 @@ class App extends React.Component {
       }
     });
 
+    console.log(formInput);
+
     // sends data to python
     var path = window.location.href;
     axios({
@@ -50,11 +54,12 @@ class App extends React.Component {
             user: { authenticated: true, username: response.data.username },
             error: false
           });
-          localStorage.setItem('userState', this.state.user);
+          localStorage.setItem('userState', JSON.stringify(this.state.user));
         } else {
           this.setState({
             error: { type: 'login', message: 'Incorrect username or password' }
           });
+          console.log(this.state.error);
         }
       })
       .catch(function(error) {
@@ -70,28 +75,24 @@ class App extends React.Component {
   };
 
   render() {
-    // checks for admin dashboard
-    const path = window.location.href;
-    let components;
-    if (path.indexOf('admin') > -1) {
-      components = (
-        <>
-          <Header user={this.state.user} onLogout={this.handleLogout} />
-          {this.state.user ? null : (
-            <Login onSubmit={this.handleLogin} error={this.state.error} />
-          )}
-        </>
-      );
+    let render;
+    if (this.state.user) {
+      return <Dashboard onLogout={this.handleLogout} />;
     } else {
-      components = (
-        <>
-          <Header user={this.state.user} />
-        </>
-      );
+      return <Login error={this.state.error} onSubmit={this.handleLogin} />;
     }
-
-    return components;
   }
 }
 
-export default App;
+// admin dashboard component
+class Dashboard extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
+    return <Logout onLogout={this.props.onLogout} />;
+  }
+}
+
+export default Admin;

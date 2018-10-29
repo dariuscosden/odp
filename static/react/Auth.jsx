@@ -14,7 +14,7 @@ class Login extends React.Component {
           <input type="text" name="username" />
           <label htmlFor="password">Password</label>
           <input type="text" name="password" />
-          <input onClick={this.props.onClick} type="submit" value="Login" />
+          <input type="submit" value="Login" />
           <br />
           {this.props.error.type == 'login' ? (
             <span className="errorMessage">{this.props.error.message}</span>
@@ -26,3 +26,17 @@ class Login extends React.Component {
 }
 
 export default Login;
+
+export class Logout extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
+    return (
+      <a href="/logout" onClick={this.props.onLogout}>
+        Logout
+      </a>
+    );
+  }
+}
