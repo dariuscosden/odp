@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import Logout from './Auth';
+import Logout from './Auth/Auth';
 
 class Header extends React.Component {
   constructor(props) {
@@ -12,7 +12,9 @@ class Header extends React.Component {
         <div className="container">
           <div className="headerContainer-flex">
             <div className="headerContainer-logo">
-              <h1>Ouate de phoque</h1>
+              <h1>
+                <b>Ouate de phoque</b>
+              </h1>
             </div>
           </div>
         </div>

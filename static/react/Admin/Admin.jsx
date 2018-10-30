@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import Header from './Header';
-import Login, { Logout } from './Auth';
+import Header from '../Header';
+import Login, { Logout } from '../Auth/Auth';
 
 const axios = require('axios');
 
@@ -16,7 +16,6 @@ class Admin extends React.Component {
   }
 
   componentDidMount() {
-    // localStorage.clear();
     // checks for user
     const userState = JSON.parse(localStorage.getItem('userState'));
     if (userState) {
@@ -39,8 +38,6 @@ class Admin extends React.Component {
       }
     });
 
-    console.log(formInput);
-
     // sends data to python
     var path = window.location.href;
     axios({
@@ -59,7 +56,6 @@ class Admin extends React.Component {
           this.setState({
             error: { type: 'login', message: 'Incorrect username or password' }
           });
-          console.log(this.state.error);
         }
       })
       .catch(function(error) {
@@ -91,7 +87,11 @@ class Dashboard extends React.Component {
   }
 
   render() {
-    return <Logout onLogout={this.props.onLogout} />;
+    return (
+      <div className="container">
+        <Logout onLogout={this.props.onLogout} />
+      </div>
+    );
   }
 }
 
