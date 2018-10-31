@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
 
 // global blog component
 class Blog extends React.Component {
@@ -9,14 +8,17 @@ class Blog extends React.Component {
 
   render() {
     return (
-      <div className="container">
-        <div className="blogContainer">
-          <Feed
-            posts={this.props.posts}
-            getMorePosts={this.props.getMorePosts}
-            morePostsAvailable={this.props.morePostsAvailable}
-          />
-          <Sidebar />
+      <div className="backgroundContainer">
+        <div className="container">
+          <div className="blogContainer">
+            <SidebarLeft />
+            <Feed
+              posts={this.props.posts}
+              getMorePosts={this.props.getMorePosts}
+              morePostsAvailable={this.props.morePostsAvailable}
+            />
+            <SidebarRight />
+          </div>
         </div>
       </div>
     );
@@ -42,25 +44,25 @@ class Feed extends React.Component {
       <div className="feedContainer-flex">
         {arr.map(post => (
           <div className="postContainer" key={post.id}>
-            <div className="postContainer-title">{post.title}</div>
-            <div className="postContainer-author">
-              Publié par{' '}
-              <i>
-                <span className="mainColor-dark bold">{post.user}</span>
-              </i>
+            <div className="postContainer-hr">
+              <hr />
             </div>
+            <div className="postContainer-img">
+              <img src="https://i.kinja-img.com/gawker-media/image/upload/s--IoFa6NEN--/c_scale,f_auto,fl_progressive,q_80,w_800/vub3vgkwxnuwwj36emni.jpg" />
+            </div>
+
             <div className="postContainer-dateCreated">
               <small>
                 <i>{post.dateCreated}</i>
               </small>
             </div>
-            <hr />
+            <div className="postContainer-title">{post.title}</div>
             <div className="postContainer-body">{post.body}</div>
           </div>
         ))}
         {this.props.morePostsAvailable ? (
           <a
-            class="mainButton ease03"
+            className="mainButton ease03"
             href=""
             onClick={this.props.getMorePosts}
           >
@@ -72,12 +74,22 @@ class Feed extends React.Component {
   }
 }
 
-// blog sidebar
-class Sidebar extends Component {
+// blog sidebarRight
+class SidebarRight extends Component {
   constructor(props) {
     super(props);
   }
   render() {
-    return <div className="sidebarContainer">Sidebar</div>;
+    return <div className="sidebarContainer">SidebarRight</div>;
+  }
+}
+
+// blog sidebarLeft
+class SidebarLeft extends Component {
+  constructor(props) {
+    super(props);
+  }
+  render() {
+    return <div className="sidebarContainer">SidebarLeft</div>;
   }
 }

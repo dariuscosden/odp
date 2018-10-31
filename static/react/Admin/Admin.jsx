@@ -1,6 +1,4 @@
 import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
-import Header from '../Header';
 import Login, { Logout } from '../Auth/Auth';
 
 const axios = require('axios');
