@@ -50,6 +50,17 @@ def index():
                 d['title'] = post.title
                 d['slug'] = post.slug
                 d['body'] = post.body
+                excerpList = post.body.split()
+                words = 0
+                excerp = ''
+                for word in excerpList:
+                    if words < 29:
+                        excerp += word + ' '
+                        words += 1
+                    elif words == 29:
+                        excerp += word + '...'
+                        words += 1
+                d['excerp'] = excerp
                 d['dateCreated'] = post.dateCreated
                 d['user'] = post.user.username
                 jsonPosts.append(d)

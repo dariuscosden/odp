@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
 import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
+import Header from './Header';
 import Blog from './Blog/Blog';
 import Admin from './Admin/Admin';
 
@@ -11,8 +11,9 @@ class App extends React.Component {
     super(props);
     this.state = {
       posts: false,
-      pagesRequested: 1,
-      morePostsAvailable: false
+      pagesRequested: 10,
+      morePostsAvailable: false,
+      marginTop: { marginTop: 0 }
     };
   }
 
@@ -61,24 +62,35 @@ class App extends React.Component {
       });
   };
 
+  // gets the header height
+  getHeaderHeight = header => {
+    var headerHeight = header.offsetHeight;
+    console.log(headerHeight);
+    this.setState({ marginTop: { marginTop: headerHeight } });
+  };
+
   render() {
     return (
-      <Router>
-        <Switch>
-          <Route
-            exact={true}
-            path="/"
-            render={() => (
-              <Blog
-                posts={this.state.posts}
-                getMorePosts={this.getMorePosts}
-                morePostsAvailable={this.state.morePostsAvailable}
-              />
-            )}
-          />
-          <Route path="/admin" component={Admin} />
-        </Switch>
-      </Router>
+      <>
+        <Header getHeight={this.getHeaderHeight} />
+        <Router>
+          <Switch>
+            <Route
+              exact={true}
+              path="/"
+              render={() => (
+                <Blog
+                  posts={this.state.posts}
+                  getMorePosts={this.getMorePosts}
+                  morePostsAvailable={this.state.morePostsAvailable}
+                  marginTop={this.state.marginTop}
+                />
+              )}
+            />
+            <Route path="/admin" component={Admin} />
+          </Switch>
+        </Router>
+      </>
     );
   }
 }

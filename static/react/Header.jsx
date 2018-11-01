@@ -3,21 +3,25 @@ import React, { Component } from 'react';
 class Header extends React.Component {
   constructor(props) {
     super(props);
+    this.header = React.createRef();
   }
+
+  componentDidMount = () => {
+    this.props.getHeight(this.header.current);
+  };
+
   render() {
     return (
-      <div className="headerContainer-fixed">
+      <div ref={this.header} className="headerContainer-fixed">
         <div className="headerContainer">
           <div className="container">
             <div className="headerContainer-flex">
               <div className="headerContainer-logo">
-                <h1>
-                  <span>Ouate de phoque</span>
-                </h1>
+                <h1>Ouate de phoque</h1>
               </div>
-              <div className="headerContainer-phoque">
+              {/* <div className="headerContainer-phoque">
                 <img src="dist/images/odp-phoque.png" />
-              </div>
+              </div> */}
             </div>
           </div>
         </div>
@@ -34,11 +38,11 @@ class SubHeader extends Component {
     super(props);
   }
 
-  clickChild = e => {
-    e.firstChild(function() {
+  clickChild() {
+    this.firstChild(function() {
       this.click();
     });
-  };
+  }
 
   render() {
     return (

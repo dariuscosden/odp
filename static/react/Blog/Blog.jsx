@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
 
 // global blog component
 class Blog extends React.Component {
@@ -8,16 +9,20 @@ class Blog extends React.Component {
 
   render() {
     return (
-      <div className="backgroundContainer">
+      <div style={this.props.marginTop} className="backgroundContainer">
         <div className="container">
           <div className="blogContainer">
-            <SidebarLeft />
+            <div className="sidebarContainer">
+              <SidebarLeft />
+            </div>
             <Feed
               posts={this.props.posts}
               getMorePosts={this.props.getMorePosts}
               morePostsAvailable={this.props.morePostsAvailable}
             />
-            <SidebarRight />
+            <div className="sidebarContainer">
+              <SidebarRight />
+            </div>
           </div>
         </div>
       </div>
@@ -41,35 +46,39 @@ class Feed extends React.Component {
       arr.push(jsonPosts[key]);
     });
     return (
-      <div className="feedContainer-flex">
-        {arr.map(post => (
-          <div className="postContainer" key={post.id}>
-            <div className="postContainer-hr">
-              <hr />
-            </div>
-            <div className="postContainer-img">
-              <img src="https://i.kinja-img.com/gawker-media/image/upload/s--IoFa6NEN--/c_scale,f_auto,fl_progressive,q_80,w_800/vub3vgkwxnuwwj36emni.jpg" />
-            </div>
+      <Router>
+        <div className="feedContainer-flex">
+          {arr.map(post => (
+            <div className="postContainer" key={post.id}>
+              <div className="postContainer-hr">
+                <hr />
+              </div>
+              <div className="postContainer-img">
+                <img src="https://i.kinja-img.com/gawker-media/image/upload/s--IoFa6NEN--/c_scale,f_auto,fl_progressive,q_80,w_800/vub3vgkwxnuwwj36emni.jpg" />
+              </div>
 
-            <div className="postContainer-dateCreated">
-              <small>
-                <i>{post.dateCreated}</i>
-              </small>
+              <div className="postContainer-dateCreated">
+                <small>
+                  <i>{post.dateCreated}</i>
+                </small>
+              </div>
+              <div className="postContainer-title">
+                <Link to={'/' + post.slug}>{post.title}</Link>
+              </div>
+              <div className="postContainer-body">{post.excerp}</div>
             </div>
-            <div className="postContainer-title">{post.title}</div>
-            <div className="postContainer-body">{post.body}</div>
-          </div>
-        ))}
-        {this.props.morePostsAvailable ? (
-          <a
-            className="mainButton ease03"
-            href=""
-            onClick={this.props.getMorePosts}
-          >
-            Plus d'articles
-          </a>
-        ) : null}
-      </div>
+          ))}
+          {this.props.morePostsAvailable ? (
+            <a
+              className="mainButton ease03"
+              href=""
+              onClick={this.props.getMorePosts}
+            >
+              Plus d'articles
+            </a>
+          ) : null}
+        </div>
+      </Router>
     );
   }
 }
@@ -80,7 +89,7 @@ class SidebarRight extends Component {
     super(props);
   }
   render() {
-    return <div className="sidebarContainer">SidebarRight</div>;
+    return <p>Sidebar Right</p>;
   }
 }
 
@@ -90,6 +99,6 @@ class SidebarLeft extends Component {
     super(props);
   }
   render() {
-    return <div className="sidebarContainer">SidebarLeft</div>;
+    return <p>Sidebar Left</p>;
   }
 }
