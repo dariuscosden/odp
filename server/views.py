@@ -6,7 +6,7 @@ from server.models import User, Post
 import json
 
 # renders index.html
-@app.route('/', methods=('GET', 'POST'))
+@app.route('/', methods=('GET', 'POST'), endpoint='home')
 @app.route('/admin', methods=('GET', 'POST'))
 def index():
 
@@ -81,3 +81,7 @@ def logout():
 
     flash(message)
     return redirect(url_for('index'))
+
+@app.errorhandler(404)
+def page_not_found(e):
+    return redirect(url_for('home'))

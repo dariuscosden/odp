@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import HeaderLink from './HeaderLink';
 
 class Header extends React.Component {
   constructor(props) {
@@ -38,31 +39,16 @@ class SubHeader extends Component {
     super(props);
   }
 
-  clickChild() {
-    this.firstChild(function() {
-      this.click();
-    });
-  }
-
   render() {
     return (
       <div className="subHeaderContainer">
         <div className="container">
           <div className="subHeader-menuContainer">
-            <div
-              className="subHeader-menuItem"
-              onClick={() => {
-                this.clickChild();
-              }}
-            >
-              <a href="/acceuil">Acceuil</a>
-            </div>
-            <div className="subHeader-menuItem">
-              <a href="/nouvelles">Nouvelles</a>
-            </div>
-            <div className="subHeader-menuItem">
-              <a href="/contact">Contact</a>
-            </div>
+            <HeaderLink exact to="/">
+              Acceuil
+            </HeaderLink>
+            <HeaderLink to="/facebook">Facebook</HeaderLink>
+            <HeaderLink to="/soumettre">Soumettre</HeaderLink>
           </div>
         </div>
       </div>
