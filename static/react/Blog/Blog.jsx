@@ -2,6 +2,9 @@ import React, { Component } from 'react';
 import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
 import Header from './Header';
 import Soumettre from './Soumettre';
+import Feed from './Feed/Feed';
+import { SidebarLeft, SidebarRight } from './Feed/Sidebar';
+import BlogPost from './Post/BlogPost';
 
 // global blog component
 class Blog extends React.Component {
@@ -20,107 +23,53 @@ class Blog extends React.Component {
     return (
       <>
         <Header getHeight={this.getHeaderHeight} />
-        <Route
-          exact
-          path="/"
-          render={() => (
-            <Feed
-              posts={this.props.posts}
-              getMorePosts={this.props.getMorePosts}
-              morePostsAvailable={this.props.morePostsAvailable}
-            />
-          )}
-        />
-        <Route path="/soumettre" component={Soumettre} />
-        {/* <div style={this.props.marginTop} className="backgroundContainer">
+        <div style={this.state.marginTop} className="backgroundContainer">
           <div className="container">
             <div className="blogContainer">
-              <div className="sidebarContainer">
-                <SidebarLeft />
-              </div>
-              <Feed
-                posts={this.props.posts}
-                getMorePosts={this.props.getMorePosts}
-                morePostsAvailable={this.props.morePostsAvailable}
+              <Route
+                exact
+                path="/"
+                render={() => (
+                  <>
+                    <SidebarLeft />
+                    <Feed
+                      posts={this.props.posts}
+                      getMorePosts={this.props.getMorePosts}
+                      morePostsAvailable={this.props.morePostsAvailable}
+                    />
+                    <SidebarRight />
+                  </>
+                )}
               />
-              <div className="sidebarContainer">
-                <SidebarRight />
-              </div>
+              <Route path="/soumettre" component={Soumettre} />
+              <Route
+                path="/:postSlug"
+                render={props => {
+                  const posts = JSON.parse(this.props.posts);
+                  const post = posts.find(
+                    p => p.slug === props.match.params.postSlug
+                  );
+                  if (!post) {
+                    return null;
+                  }
+                  return (
+                    <BlogPost
+                      {...props}
+                      postDateCreated={post.dateCreated}
+                      postSlug={post.slug}
+                      postTitle={post.title}
+                      postBody={post.body}
+                      postCategory={post.category}
+                    />
+                  );
+                }}
+              />
             </div>
           </div>
-        </div> */}
+        </div>
       </>
     );
   }
 }
 
 export default Blog;
-
-// blog feed
-class Feed extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
-  render() {
-    // gets posts from props
-    var jsonPosts = JSON.parse(this.props.posts);
-    var arr = [];
-    Object.keys(jsonPosts).forEach(function(key) {
-      arr.push(jsonPosts[key]);
-    });
-    return (
-      <div className="feedContainer-flex">
-        {arr.map(post => (
-          <div className="postContainer" key={post.id}>
-            <div className="postContainer-hr">
-              <hr />
-            </div>
-            <div className="postContainer-img">
-              <img src="https://i.kinja-img.com/gawker-media/image/upload/s--IoFa6NEN--/c_scale,f_auto,fl_progressive,q_80,w_800/vub3vgkwxnuwwj36emni.jpg" />
-            </div>
-
-            <div className="postContainer-dateCreated">
-              <small>
-                <i>{post.dateCreated}</i>
-              </small>
-            </div>
-            <div className="postContainer-title">
-              <Link to={'/' + post.slug}>{post.title}</Link>
-            </div>
-            <div className="postContainer-body">{post.excerp}</div>
-          </div>
-        ))}
-        {this.props.morePostsAvailable ? (
-          <a
-            className="mainButton ease03"
-            href=""
-            onClick={this.props.getMorePosts}
-          >
-            Plus d'articles
-          </a>
-        ) : null}
-      </div>
-    );
-  }
-}
-
-// blog sidebarRight
-class SidebarRight extends Component {
-  constructor(props) {
-    super(props);
-  }
-  render() {
-    return <p>Sidebar Right</p>;
-  }
-}
-
-// blog sidebarLeft
-class SidebarLeft extends Component {
-  constructor(props) {
-    super(props);
-  }
-  render() {
-    return <p>Sidebar Left</p>;
-  }
-}

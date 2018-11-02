@@ -61,19 +61,20 @@ class App extends React.Component {
 
   render() {
     return (
-      <>
+      <Switch>
+        <Route path="/admin" render={() => <Admin />} />
         <Route
           path="/"
-          render={() => (
+          render={({ match }) => (
             <Blog
               posts={this.state.posts}
               getMorePosts={this.getMorePosts}
               morePostsAvailable={this.state.morePostsAvailable}
-              marginTop={this.state.marginTop}
+              match={match}
             />
           )}
         />
-      </>
+      </Switch>
     );
   }
 }
