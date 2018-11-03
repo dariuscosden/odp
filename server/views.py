@@ -32,10 +32,8 @@ def index():
             else:
                 return json.dumps({'authenticated': False})
 
-        # posts
-        if data.get('posts'):
-            pagesRequested = data.get('pagesRequested')
-            posts = Post.query.order_by(desc(Post.dateCreated)).paginate(1, pagesRequested, error_out=True)
+        # jsonifies posts
+        def jsonifyPosts(posts):
             jsonPosts = []
 
             # checking for next page
@@ -62,10 +60,39 @@ def index():
                         words += 1
                 d['excerp'] = excerp
                 d['dateCreated'] = post.dateCreated
+                d['category'] = post.category
                 d['user'] = post.user.username
                 jsonPosts.append(d)
 
             return json.dumps(jsonPosts)
+
+        # posts
+        if data.get('posts'):
+            pagesRequested = data.get('pagesRequested')
+            posts = Post.query.order_by(desc(Post.dateCreated)).paginate(1, pagesRequested, error_out=True)
+
+            return jsonifyPosts(posts)
+
+        # categories
+        if data.get('categories'):
+            pagesRequested = data.get('pagesRequested')
+            posts = Post.query.order_by(desc(Post.category)).paginate(1, pagesRequested, error_out=True)
+            jsonCategories = []
+
+            for post in posts.items:
+                if post.category not in jsonCategories:
+                    jsonCategories.append(post.category)
+
+            return json.dumps(jsonCategories)
+
+        # filter by category
+        if data.get('category'):
+            category = data.get('category')
+            pagesRequested = data.get('pagesRequested')
+            posts = Post.query.filter_by(category=category).order_by(desc(Post.dateCreated)).paginate(1, pagesRequested, error_out=True)
+
+            return jsonifyPosts(posts)
+
 
 
     return render_template('index.html')

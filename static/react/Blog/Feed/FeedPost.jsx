@@ -8,8 +8,10 @@ class FeedPost extends Component {
   render() {
     return (
       <div className="postContainer">
-        <div className="postContainer-hr">
-          <hr />
+        <div className="postContainer-separator">
+          <div className="postContainer-separatorText">
+            {this.props.postCategory}
+          </div>
         </div>
         <div className="postContainer-img">
           <img src="https://i.kinja-img.com/gawker-media/image/upload/s--IoFa6NEN--/c_scale,f_auto,fl_progressive,q_80,w_800/vub3vgkwxnuwwj36emni.jpg" />

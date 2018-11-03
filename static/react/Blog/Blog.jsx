@@ -37,7 +37,10 @@ class Blog extends React.Component {
                       getMorePosts={this.props.getMorePosts}
                       morePostsAvailable={this.props.morePostsAvailable}
                     />
-                    <SidebarRight />
+                    <SidebarRight
+                      pagesRequested={this.props.pagesRequested}
+                      filterByCategory={this.props.filterByCategory}
+                    />
                   </>
                 )}
               />

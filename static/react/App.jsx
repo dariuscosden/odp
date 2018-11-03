@@ -19,7 +19,7 @@ class App extends React.Component {
     this.getPosts();
   };
 
-  // gets posts from python
+  // gets initial posts from python
   getPosts = () => {
     axios
       .post(window.location.href, {
@@ -40,7 +40,7 @@ class App extends React.Component {
   // gets more posts
   getMorePosts = e => {
     e.preventDefault();
-    this.setState({ pagesRequested: (this.state.pagesRequested += 1) });
+    this.setState({ pagesRequested: (this.state.pagesRequested += 10) });
     axios
       .post(window.location.href, {
         posts: true,
@@ -59,6 +59,29 @@ class App extends React.Component {
       });
   };
 
+  // handles post filters
+  filterByCategory = e => {
+    e.preventDefault();
+    const target = e.target;
+    axios
+      .post(window.location.href, {
+        category: target.text,
+        pagesRequested: this.props.pagesRequested
+      })
+      .then(response => {
+        target.classList.add('sidebarFilter-linkActive');
+        response.data.shift();
+        if (this.state.posts === JSON.stringify(response.data)) {
+          target.classList.remove('sidebarFilter-linkActive');
+          this.getPosts();
+        } else {
+          this.setState({
+            posts: JSON.stringify(response.data)
+          });
+        }
+      });
+  };
+
   render() {
     return (
       <Switch>
@@ -71,6 +94,8 @@ class App extends React.Component {
               getMorePosts={this.getMorePosts}
               morePostsAvailable={this.state.morePostsAvailable}
               match={match}
+              pagesRequested={this.state.pagesRequested}
+              filterByCategory={this.filterByCategory}
             />
           )}
         />
