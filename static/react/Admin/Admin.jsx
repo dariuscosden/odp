@@ -73,7 +73,11 @@ class Admin extends React.Component {
     if (this.state.user) {
       return <Dashboard onLogout={this.handleLogout} />;
     } else {
-      return <Login error={this.state.error} onSubmit={this.handleLogin} />;
+      return (
+        <>
+          <Login error={this.state.error} onSubmit={this.handleLogin} />
+        </>
+      );
     }
   }
 }

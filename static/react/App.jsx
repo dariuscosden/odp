@@ -9,7 +9,8 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      posts: false,
+      initialPosts: false,
+      currentPosts: false,
       pagesRequested: 10,
       morePostsAvailable: false
     };
@@ -32,7 +33,8 @@ class App extends React.Component {
         }
         response.data.shift();
         this.setState({
-          posts: JSON.stringify(response.data)
+          initialPosts: JSON.stringify(response.data),
+          currentPosts: JSON.stringify(response.data)
         });
       });
   };
@@ -54,7 +56,7 @@ class App extends React.Component {
         }
         response.data.shift();
         this.setState({
-          posts: JSON.stringify(response.data)
+          currentPosts: JSON.stringify(response.data)
         });
       });
   };
@@ -66,17 +68,20 @@ class App extends React.Component {
     axios
       .post(window.location.href, {
         category: target.text,
-        pagesRequested: this.props.pagesRequested
+        pagesRequested: this.state.pagesRequested
       })
       .then(response => {
+        target.parentNode.childNodes.forEach(function(e) {
+          e.classList.remove('sidebarFilter-linkActive');
+        });
         target.classList.add('sidebarFilter-linkActive');
         response.data.shift();
-        if (this.state.posts === JSON.stringify(response.data)) {
+        if (this.state.currentPosts === JSON.stringify(response.data)) {
           target.classList.remove('sidebarFilter-linkActive');
-          this.getPosts();
+          this.setState({ currentPosts: this.state.initialPosts });
         } else {
           this.setState({
-            posts: JSON.stringify(response.data)
+            currentPosts: JSON.stringify(response.data)
           });
         }
       });
@@ -90,7 +95,7 @@ class App extends React.Component {
           path="/"
           render={({ match }) => (
             <Blog
-              posts={this.state.posts}
+              posts={this.state.currentPosts}
               getMorePosts={this.getMorePosts}
               morePostsAvailable={this.state.morePostsAvailable}
               match={match}

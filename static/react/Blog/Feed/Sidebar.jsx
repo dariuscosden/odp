@@ -8,7 +8,11 @@ class SidebarLeft extends Component {
     super(props);
   }
   render() {
-    return <div className="sidebarContainer">Ad</div>;
+    return (
+      <div className="sidebarContainer">
+        <img src="http://www.ecstudents.net/10fall/kevinpost/archive/photoshop/gif_ads/9000th-winner-animated-2.gif" />
+      </div>
+    );
   }
 }
 
@@ -38,7 +42,7 @@ class SidebarRight extends Component {
   render() {
     return (
       <div className="sidebarContainer">
-        <h2>Categories</h2>
+        <h2>Catégories</h2>
         {this.state.categories
           ? this.state.categories.map(category => (
               <a

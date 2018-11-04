@@ -76,7 +76,7 @@ def index():
         # categories
         if data.get('categories'):
             pagesRequested = data.get('pagesRequested')
-            posts = Post.query.order_by(desc(Post.category)).paginate(1, pagesRequested, error_out=True)
+            posts = Post.query.order_by(Post.category).paginate(1, pagesRequested, error_out=True)
             jsonCategories = []
 
             for post in posts.items:

@@ -25,7 +25,10 @@ class FeedPost extends Component {
         <div className="postContainer-title">
           <Link to={'/' + this.props.postSlug}>{this.props.postTitle}</Link>
         </div>
-        <div className="postContainer-body">{this.props.postExcerp}</div>
+        <div className="postContainer-body">
+          {this.props.postExcerp}{' '}
+          <Link to={'/' + this.props.postSlug}>Article complet</Link>
+        </div>
       </div>
     );
   }
