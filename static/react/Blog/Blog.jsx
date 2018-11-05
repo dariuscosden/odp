@@ -38,7 +38,7 @@ class Blog extends React.Component {
                       morePostsAvailable={this.props.morePostsAvailable}
                     />
                     <SidebarRight
-                      pagesRequested={this.props.pagesRequested}
+                      perPage={this.props.perPage}
                       filterByCategory={this.props.filterByCategory}
                     />
                   </>

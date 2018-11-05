@@ -41,7 +41,11 @@ export class Logout extends React.Component {
 
   render() {
     return (
-      <a href="/logout" onClick={this.props.onLogout}>
+      <a
+        href="/logout"
+        className="adminDashboard-sidebarLink"
+        onClick={this.props.onLogout}
+      >
         Logout
       </a>
     );

@@ -11,7 +11,8 @@ class App extends React.Component {
     this.state = {
       initialPosts: false,
       currentPosts: false,
-      pagesRequested: 10,
+      pageRequested: 1,
+      perPage: 10,
       morePostsAvailable: false
     };
   }
@@ -25,12 +26,13 @@ class App extends React.Component {
     axios
       .post(window.location.href, {
         posts: true,
-        pagesRequested: this.state.pagesRequested
+        perPage: this.state.perPage
       })
       .then(response => {
-        if (response.data[0].morePostsAvailable) {
+        if (response.data[0].nextPage) {
           this.setState({ morePostsAvailable: true });
         }
+        response.data.shift();
         response.data.shift();
         this.setState({
           initialPosts: JSON.stringify(response.data),
@@ -42,18 +44,19 @@ class App extends React.Component {
   // gets more posts
   getMorePosts = e => {
     e.preventDefault();
-    this.setState({ pagesRequested: (this.state.pagesRequested += 10) });
+    this.setState({ perPage: (this.state.perPage += 10) });
     axios
       .post(window.location.href, {
         posts: true,
-        pagesRequested: this.state.pagesRequested
+        perPage: this.state.perPage
       })
       .then(response => {
-        if (response.data[0].morePostsAvailable) {
+        if (response.data[0].nextPage) {
           this.setState({ morePostsAvailable: true });
         } else {
           this.setState({ morePostsAvailable: false });
         }
+        response.data.shift();
         response.data.shift();
         this.setState({
           currentPosts: JSON.stringify(response.data)
@@ -68,13 +71,14 @@ class App extends React.Component {
     axios
       .post(window.location.href, {
         category: target.text,
-        pagesRequested: this.state.pagesRequested
+        perPage: this.state.perPage
       })
       .then(response => {
         target.parentNode.childNodes.forEach(function(e) {
           e.classList.remove('sidebarFilter-linkActive');
         });
         target.classList.add('sidebarFilter-linkActive');
+        response.data.shift();
         response.data.shift();
         if (this.state.currentPosts === JSON.stringify(response.data)) {
           target.classList.remove('sidebarFilter-linkActive');
@@ -99,7 +103,7 @@ class App extends React.Component {
               getMorePosts={this.getMorePosts}
               morePostsAvailable={this.state.morePostsAvailable}
               match={match}
-              pagesRequested={this.state.pagesRequested}
+              perPage={this.state.perPage}
               filterByCategory={this.filterByCategory}
             />
           )}

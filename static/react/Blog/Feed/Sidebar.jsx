@@ -32,7 +32,7 @@ class SidebarRight extends Component {
     axios
       .post(window.location.href, {
         categories: true,
-        pagesRequested: this.props.pagesRequested
+        perPage: this.props.perPage
       })
       .then(response => {
         this.setState({ categories: response.data });

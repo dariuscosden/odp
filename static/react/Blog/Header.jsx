@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import HeaderLink from './HeaderLink';
+import HeaderLink from './Links';
 
 class Header extends React.Component {
   constructor(props) {
