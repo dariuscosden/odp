@@ -16,8 +16,9 @@ class Admin extends React.Component {
       initialPosts: false,
       currentPosts: false,
       initialNextPage: false,
-      previousPage: false,
-      nextPage: false
+      nextPage: false,
+      initialPreviousPage: false,
+      previousPage: false
     };
   }
 
@@ -47,6 +48,12 @@ class Admin extends React.Component {
           this.setState({
             initialNextPage: true,
             nextPage: true
+          });
+        }
+        if (response.data[1].previousPage) {
+          this.setState({
+            initialPreviousPage: true,
+            previousPage: true
           });
         }
         response.data.shift();
@@ -165,27 +172,35 @@ class Admin extends React.Component {
       axios
         .post('/adminPosts', {
           searchPosts: searchInput,
+          pageRequested: 1,
           perPage: this.state.perPage
         })
         .then(response => {
-          if (response.data[0].nextPage) {
-            this.setState({ nextPage: true });
-          } else {
-            this.setState({ nextPage: false });
+          if (response.data) {
+            if (response.data[0].nextPage) {
+              this.setState({ nextPage: true });
+            } else {
+              this.setState({ nextPage: false });
+            }
+            if (response.data[1].previousPage) {
+              this.setState({ previousPage: true });
+            } else {
+              this.setState({ previousPage: false });
+            }
+            response.data.shift();
+            response.data.shift();
+            this.setState({
+              currentPosts: JSON.stringify(response.data),
+              pageRequested: 1
+            });
           }
-          if (response.data[1].previousPage) {
-            this.setState({ previousPage: true });
-          } else {
-            this.setState({ previousPage: false });
-          }
-          response.data.shift();
-          response.data.shift();
-          this.setState({ currentPosts: JSON.stringify(response.data) });
         });
     } else {
       this.setState({
         currentPosts: this.state.initialPosts,
-        nextPage: this.state.initialNextPage
+        pageRequested: 1,
+        nextPage: this.state.initialNextPage,
+        previousPage: this.state.initialPreviousPage
       });
     }
   };

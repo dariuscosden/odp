@@ -1,7 +1,75 @@
 import React, { Component } from 'react';
-import { Link, Route } from 'react-router-dom';
+import { Link, Route, Switch } from 'react-router-dom';
+import AdminPost from './AdminPost';
 
 class AdminPosts extends Component {
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
+    return (
+      <div className="adminPosts-container">
+        <div className="adminPosts-flex">
+          <div className="adminPosts-header">
+            <span className="headingThree bold">Manage your blog</span>
+          </div>
+          <div className="adminPosts-search">
+            <form
+              className="adminPosts-searchForm"
+              onSubmit={this.props.searchPosts}
+            >
+              <input type="text" placeholder="search posts" />
+              <input type="submit" value="search" />
+            </form>
+          </div>
+        </div>
+        <hr />
+        <Switch>
+          <Route
+            path="/admin/posts/:postSlug"
+            render={props => {
+              const posts = JSON.parse(this.props.posts);
+              const post = posts.find(
+                p => p.slug === props.match.params.postSlug
+              );
+              if (!post) {
+                return null;
+              }
+              return (
+                <AdminPost
+                  {...props}
+                  postDateCreated={post.dateCreated}
+                  postSlug={post.slug}
+                  postTitle={post.title}
+                  postBody={post.body}
+                  postCategory={post.category}
+                  postUser={post.user}
+                />
+              );
+            }}
+          />
+          <Route
+            path="/admin/posts"
+            render={() => (
+              <AdminPostList
+                posts={this.props.posts}
+                previousPage={this.props.previousPage}
+                nextPage={this.props.nextPage}
+                getNextPage={this.props.getNextPage}
+                getPrevPage={this.props.getPrevPage}
+              />
+            )}
+          />
+        </Switch>
+      </div>
+    );
+  }
+}
+
+export default AdminPosts;
+
+class AdminPostList extends Component {
   constructor(props) {
     super(props);
   }
@@ -18,34 +86,26 @@ class AdminPosts extends Component {
           <i>{post.dateCreated}</i>
         </small>
         <br />
-        Posted by {post.user}
+        <small>
+          Posted by{' '}
+          <i>
+            <b>{post.user}</b>
+          </i>
+        </small>
       </li>
     ));
-    return (
-      <div className="adminPosts-container">
-        <div className="adminPosts-flex">
-          <div className="adminPosts-header">
-            <span className="headingThree bold">Manage your posts</span>
-            <br />
-            <span className="headingTwo">Public posts</span>
-          </div>
-          <div className="adminPosts-search">
-            <form
-              className="adminPosts-searchForm"
-              onSubmit={this.props.searchPosts}
-            >
-              <input type="text" placeholder="search posts" />
-              <input type="submit" value="search" />
-            </form>
-          </div>
-        </div>
-        <hr />
-        <ul className="adminPosts-postList">{posts}</ul>
-        {this.props.previousPage ? (
+
+    let previousPage;
+    let nextPage;
+    if (posts.length) {
+      if (this.props.previousPage) {
+        previousPage = (
           <a href="" className="mainButton" onClick={this.props.getPrevPage}>
             Prev
           </a>
-        ) : (
+        );
+      } else {
+        previousPage = (
           <a
             href=""
             className="mainButton-greyed"
@@ -53,12 +113,16 @@ class AdminPosts extends Component {
           >
             Prev
           </a>
-        )}
-        {this.props.nextPage ? (
+        );
+      }
+      if (this.props.nextPage) {
+        nextPage = (
           <a href="" className="mainButton" onClick={this.props.getNextPage}>
             Next
           </a>
-        ) : (
+        );
+      } else {
+        nextPage = (
           <a
             href=""
             className="mainButton-greyed"
@@ -66,10 +130,19 @@ class AdminPosts extends Component {
           >
             Next
           </a>
-        )}
+        );
+      }
+    } else {
+      nextPage = 'No posts match your query.';
+    }
+
+    return (
+      <div className="adminPosts-postsContainer">
+        <span className="headingTwo bold">Posts</span>
+        <ul className="adminPosts-postList">{posts}</ul>
+        {previousPage}
+        {nextPage}
       </div>
     );
   }
 }
-
-export default AdminPosts;

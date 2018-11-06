@@ -135,9 +135,12 @@ def adminPosts():
             searchInput = data.get('searchPosts')
             pageRequested = data.get('pageRequested')
             perPage = data.get('perPage')
-            posts = Post.query.filter(or_(Post.title.like('%' + searchInput + '%'), Post.body.like('%' + searchInput + '%'))).paginate(1, perPage, error_out=True)
+            posts = Post.query.filter(or_(Post.title.like('%' + searchInput + '%'), Post.body.like('%' + searchInput + '%'))).order_by(desc(Post.title)).paginate(pageRequested, perPage, error_out=True)
             
-            return jsonifyPosts(posts)
+            if posts:
+                return jsonifyPosts(posts)
+            else:
+                return false
 
         # handles admin getNextPage
         if data.get('getNextPage'):
@@ -145,7 +148,6 @@ def adminPosts():
             pageRequested = data.get('pageRequested')
             posts = Post.query.order_by(desc(Post.dateCreated)).paginate(pageRequested, perPage, error_out=True)
 
-            print(posts)
             return jsonifyPosts(posts)
             
 

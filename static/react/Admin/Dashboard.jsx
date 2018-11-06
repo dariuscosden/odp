@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import { Link, Route } from 'react-router-dom';
+import { Link, Route, Switch } from 'react-router-dom';
 import { Logout } from '../Auth/Auth';
 import AdminPosts from './AdminPosts';
+import AdminPost from './AdminPost';
 import { AdminLink } from '../Blog/Links';
 
 // admin dashboard component
@@ -19,7 +20,7 @@ class Dashboard extends React.Component {
           </a>
           <AdminLink to="/admin/posts">
             <i className="fas fa-edit" />
-            Posts Manager
+            Blog Manager
           </AdminLink>
           <AdminLink to="/admin/users">
             <i className="fas fa-user-edit" />
@@ -31,18 +32,13 @@ class Dashboard extends React.Component {
           <Logout onLogout={this.props.onLogout} />
         </div>
         <div className="adminDashboard-content">
-          <Route
-            path="/admin/posts"
-            render={() => (
-              <AdminPosts
-                posts={this.props.posts}
-                searchPosts={this.props.searchPosts}
-                nextPage={this.props.nextPage}
-                previousPage={this.props.previousPage}
-                getPrevPage={this.props.getPrevPage}
-                getNextPage={this.props.getNextPage}
-              />
-            )}
+          <AdminPosts
+            posts={this.props.posts}
+            searchPosts={this.props.searchPosts}
+            nextPage={this.props.nextPage}
+            previousPage={this.props.previousPage}
+            getPrevPage={this.props.getPrevPage}
+            getNextPage={this.props.getNextPage}
           />
         </div>
       </div>
