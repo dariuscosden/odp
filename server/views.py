@@ -3,6 +3,7 @@ from flask import render_template, redirect, request, url_for, flash, session
 from werkzeug.security import check_password_hash
 from sqlalchemy import desc, or_
 from server.models import User, Post
+from server.database import db
 import json
 
  # jsonifies posts
@@ -50,7 +51,7 @@ def jsonifyPosts(posts):
 @app.route('/admin', methods=('GET', 'POST'), endpoint='admin')
 def index():
 
-    # handles post request
+    # handles POST request
     if request.method == 'POST':
         data = request.get_json()
 
@@ -77,7 +78,8 @@ def index():
         # posts
         if data.get('posts'):
             perPage = data.get('perPage')
-            posts = Post.query.order_by(desc(Post.dateCreated)).paginate(1, perPage, error_out=True)
+            pageRequested = data.get('pageRequested')
+            posts = Post.query.order_by(desc(Post.dateCreated)).paginate(pageRequested, perPage, error_out=True)
 
             return jsonifyPosts(posts)
 
@@ -149,6 +151,29 @@ def adminPosts():
             posts = Post.query.order_by(desc(Post.dateCreated)).paginate(pageRequested, perPage, error_out=True)
 
             return jsonifyPosts(posts)
+
+        # handles update post
+        if data.get('updatePost'):
+            postID = data.get('postID')
+            postTitle = data.get('postTitle')
+            postBody = data.get('postBody')
+            post = Post.query.filter_by(id=postID).first()
+
+            # updates post
+            post.title = postTitle
+            post.body = postBody
+
+            db.session.commit()
+
+            # returns updated post to react
+            def updateReact():
+                d = {}
+                d['postTitle'] = postTitle
+                d['postBody'] = postBody
+
+                return json.dumps(d)
+            
+            return updateReact()
             
 
     return redirect(url_for('admin'))

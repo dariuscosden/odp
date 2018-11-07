@@ -39,6 +39,7 @@ class Dashboard extends React.Component {
             previousPage={this.props.previousPage}
             getPrevPage={this.props.getPrevPage}
             getNextPage={this.props.getNextPage}
+            updatePost={this.props.updatePost}
           />
         </div>
       </div>

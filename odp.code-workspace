@@ -1,18 +1,18 @@
 {
-"folders": [
-	{
-		"path": "/Users/dariusmandres/Desktop/projects/flask-projects/flask-react-template"
-	},
-	{
-		"path": "/Users/dariusmandres/Desktop/projects/flask-projects/classvarsity2"
-	},
-	{
-		"path": "/Users/dariusmandres/Desktop/projects/misc/protos"
-	},
-	{
-		"path": "."
-	}
-],
+  "folders": [
+    {
+      "path": "/Users/dariusmandres/Desktop/projects/misc/protos"
+    },
+    {
+      "path": "/Users/dariusmandres/Desktop/projects/flask-projects/flask-react-template"
+    },
+    {
+      "path": "/Users/dariusmandres/Desktop/projects/flask-projects/classvarsity2"
+    },
+    {
+      "path": "."
+    }
+  ],
   "settings": {
     "git.ignoreLimitWarning": true
   }

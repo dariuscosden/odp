@@ -1,42 +1,60 @@
 import React, { Component } from 'react';
 import ReactQuill, { EditorState } from 'react-quill';
 
+const axios = require('axios');
+
 class AdminPost extends React.Component {
   constructor(props) {
     super(props);
+    this.postTitleEditor = React.createRef();
+    this.postBodyEditor = React.createRef();
   }
-
-  updatePost = e => {
-    e.preventDefault();
-    console.log(e.target);
-  };
 
   render() {
     return (
       <div className="adminPost-flex">
-        <div className="adminPost-postInfo">
+        <div className="adminPost-postEdit">
           <div className="adminPost-header">
-            <span className="headingTwo accentColor bold">
-              {this.props.postTitle}
-            </span>
-            <br />
-            <small>
-              <i>{this.props.postDateCreated}</i>
-            </small>
-            <br />
-            <small>
-              Posted by{' '}
-              <i>
-                <b>{this.props.postUser}</b>
-              </i>
-            </small>
+            <span className="headingOneHalf">Title</span>
+            <PostTitleEditor
+              ref={this.postTitleEditor}
+              postTitle={this.props.postTitle}
+            />
           </div>
           <div id="adminPost-body" className="adminPost-body">
-            <RichTextEditor postBody={this.props.postBody} />
+            <span className="headingOneHalf">Body</span>
+            <PostBodyEditor
+              ref={this.postBodyEditor}
+              postBody={this.props.postBody}
+              // onEditText={this.updatePost}
+            />
           </div>
-          <a href="" className="mainButton" onClick={this.updatePost}>
+          <a href="" className="mainButton" onClick={this.props.updatePost}>
             Save Changes
           </a>
+        </div>
+        <div className="adminPost-postDetails">
+          <small>
+            Post id
+            {': '}
+            <i>
+              <b id="postID">{this.props.postID}</b>
+            </i>
+          </small>
+          <br />
+          <small>
+            Posted on{' '}
+            <i>
+              <b>{this.props.postDateCreated}</b>
+            </i>
+          </small>
+          <br />
+          <small>
+            Posted by{' '}
+            <i>
+              <b>{this.props.postUser}</b>
+            </i>
+          </small>
         </div>
       </div>
     );
@@ -45,7 +63,30 @@ class AdminPost extends React.Component {
 
 export default AdminPost;
 
-class RichTextEditor extends Component {
+class PostTitleEditor extends Component {
+  constructor(props) {
+    super(props);
+    this.reactQuill = React.createRef();
+  }
+
+  modules = {
+    toolbar: false
+  };
+
+  render() {
+    return (
+      <ReactQuill
+        ref={this.reactQuill}
+        id="postTitleQuill"
+        modules={this.modules}
+        theme="snow"
+        defaultValue={this.props.postTitle}
+      />
+    );
+  }
+}
+
+class PostBodyEditor extends Component {
   constructor(props) {
     super(props);
     this.reactQuill = React.createRef();
@@ -84,22 +125,29 @@ class RichTextEditor extends Component {
     'script'
   ];
 
-  componentDidMount = () => {
-    console.log(this.reactQuill.current.editor.getText());
-  };
+  // handleEditedText = () => {
+  //   var editedText = this.reactQuill.current.editor.getText();
+  //   if (editedText == '') {
+  //     console.log('no text');
+  //   }
+  //   this.props.onEditText(editedText);
+  // };
 
   render() {
     return (
-      <div className="text-editor">
-        <ReactQuill
-          ref={this.reactQuill}
-          id="testing"
-          theme="snow"
-          modules={this.modules}
-          formats={this.formats}
-          defaultValue={this.props.postBody}
-        />
-      </div>
+      <ReactQuill
+        ref={this.reactQuill}
+        id="postBodyQuill"
+        theme="snow"
+        modules={this.modules}
+        formats={this.formats}
+        defaultValue={this.props.postBody}
+        // onChange={(content, delta, source, editor) => {
+        //   if (source === 'user') {
+        //     this.handleEditedText();
+        //   }
+        // }}
+      />
     );
   }
 }

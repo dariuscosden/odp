@@ -39,12 +39,14 @@ class AdminPosts extends Component {
               return (
                 <AdminPost
                   {...props}
+                  postID={post.id}
                   postDateCreated={post.dateCreated}
                   postSlug={post.slug}
                   postTitle={post.title}
                   postBody={post.body}
                   postCategory={post.category}
                   postUser={post.user}
+                  updatePost={this.props.updatePost}
                 />
               );
             }}
