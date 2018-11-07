@@ -32,6 +32,25 @@ class Dashboard extends React.Component {
           <Logout onLogout={this.props.onLogout} />
         </div>
         <div className="adminDashboard-content">
+          <div className="adminDashboardHeader-flex">
+            <div className="adminDashboardHeader-header">
+              <span className="headingThree bold">Manage your blog</span>
+            </div>
+            <div className="adminDashboardHeader-menuFlex">
+              <div className="adminDashboardHeader-menuItem">
+                {this.props.publish ? (
+                  <a href="/admin" className="accentColor">
+                    Publish website
+                  </a>
+                ) : (
+                  <span className="noselect">
+                    <i>Website published</i>
+                  </span>
+                )}
+              </div>
+            </div>
+          </div>
+          <hr />
           <AdminPosts
             posts={this.props.posts}
             searchPosts={this.props.searchPosts}
@@ -39,7 +58,9 @@ class Dashboard extends React.Component {
             previousPage={this.props.previousPage}
             getPrevPage={this.props.getPrevPage}
             getNextPage={this.props.getNextPage}
+            createPost={this.props.createPost}
             updatePost={this.props.updatePost}
+            deletePost={this.props.deletePost}
           />
         </div>
       </div>

@@ -152,6 +152,21 @@ def adminPosts():
 
             return jsonifyPosts(posts)
 
+        # handles create post
+        if data.get('createPost'):
+            postTitle = data.get('postTitle')
+            postBody = data.get('postBody')
+            postCategory = data.get('postCategory')
+            postUser = data.get('postUser')
+            user = User.query.filter_by(username=postUser).first()
+            post = Post(title=postTitle, body=postBody, user=user, category=postCategory)
+
+            db.session.add(post)
+            db.session.commit()
+
+            return json.dumps({"postCreated": True})
+
+
         # handles update post
         if data.get('updatePost'):
             postID = data.get('postID')
@@ -174,6 +189,16 @@ def adminPosts():
                 return json.dumps(d)
             
             return updateReact()
+
+        # handles delete post
+        if data.get('deletePost'):
+            postID = data.get('postID')
+            post = Post.query.filter_by(id=postID).first()
+            db.session.delete(post)
+
+            db.session.commit()
+
+            return json.dumps({"postStatus": 'deleted'})
             
 
     return redirect(url_for('admin'))

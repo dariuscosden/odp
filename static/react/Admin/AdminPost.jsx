@@ -8,7 +8,18 @@ class AdminPost extends React.Component {
     super(props);
     this.postTitleEditor = React.createRef();
     this.postBodyEditor = React.createRef();
+    this.state = { deleteConfirmation: false };
   }
+
+  confirmDeletion = e => {
+    e.preventDefault();
+    this.setState({ deleteConfirmation: true });
+  };
+
+  cancelDeletion = e => {
+    e.preventDefault();
+    this.setState({ deleteConfirmation: false });
+  };
 
   render() {
     return (
@@ -55,6 +66,26 @@ class AdminPost extends React.Component {
               <b>{this.props.postUser}</b>
             </i>
           </small>
+          <br />
+          <div className="adminPost-postDelete">
+            {this.state.deleteConfirmation ? (
+              <>
+                <i>Are you sure you want to delete this post?</i>
+                <br />
+                <a href="" className="mainLink" onClick={this.props.deletePost}>
+                  Yes
+                </a>
+                <br />
+                <a href="" className="mainLink" onClick={this.cancelDeletion}>
+                  No
+                </a>
+              </>
+            ) : (
+              <a href="" className="mainLink" onClick={this.confirmDeletion}>
+                Delete Post
+              </a>
+            )}
+          </div>
         </div>
       </div>
     );
@@ -151,3 +182,5 @@ class PostBodyEditor extends Component {
     );
   }
 }
+
+export { PostTitleEditor, PostBodyEditor };

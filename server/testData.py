@@ -11,6 +11,8 @@ def populate():
     if not users:
         user = User(username='admin', password=generate_password_hash('123'), email='admin@ouatedephoque.ca')
         db.session.add(user)
+    else:
+        user = User.query.filter_by(username='admin').first()
 
 
     # populates posts

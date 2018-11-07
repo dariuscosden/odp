@@ -36,47 +36,6 @@ class Admin extends React.Component {
     this.getPosts();
   }
 
-  // searches for posts (admin)
-  searchPosts = e => {
-    e.preventDefault();
-    var searchInput = e.target.childNodes[0].value;
-    if (searchInput) {
-      axios
-        .post('/adminPosts', {
-          searchPosts: searchInput,
-          pageRequested: 1,
-          perPage: this.state.perPage
-        })
-        .then(response => {
-          if (response.data) {
-            if (response.data[0].nextPage) {
-              this.setState({ nextPage: true });
-            } else {
-              this.setState({ nextPage: false });
-            }
-            if (response.data[1].previousPage) {
-              this.setState({ previousPage: true });
-            } else {
-              this.setState({ previousPage: false });
-            }
-            response.data.shift();
-            response.data.shift();
-            this.setState({
-              currentPosts: JSON.stringify(response.data),
-              pageRequested: 1
-            });
-          }
-        });
-    } else {
-      this.setState({
-        currentPosts: this.state.initialPosts,
-        pageRequested: 1,
-        nextPage: this.state.initialNextPage,
-        previousPage: this.state.initialPreviousPage
-      });
-    }
-  };
-
   // gets initial posts from python
   getPosts = () => {
     axios
@@ -86,7 +45,6 @@ class Admin extends React.Component {
         perPage: this.state.perPage
       })
       .then(response => {
-        console.log(response.data);
         if (response.data[0].nextPage) {
           this.setState({
             initialNextPage: true,
@@ -126,6 +84,28 @@ class Admin extends React.Component {
     return postBodyHTML;
   }
 
+  createPost = e => {
+    e.preventDefault();
+    var postTitle = this.getPostTitleText();
+    var postBody = this.getPostBodyHTML();
+    var postCategory = 'Nouvelles';
+    var postUser = this.state.user.username;
+
+    axios
+      .post('/adminPosts', {
+        createPost: true,
+        postTitle: postTitle,
+        postBody: postBody,
+        postCategory: postCategory,
+        postUser: postUser
+      })
+      .then(response => {
+        console.log(response.data);
+        this.getPosts();
+        this.setState({ publish: true });
+      });
+  };
+
   updatePost = e => {
     e.preventDefault();
     var postID = this.getPostIdText();
@@ -140,6 +120,22 @@ class Admin extends React.Component {
         postBody: postBody
       })
       .then(response => {
+        this.getPosts();
+        this.setState({ publish: true });
+      });
+  };
+
+  deletePost = e => {
+    e.preventDefault();
+    var postID = this.getPostIdText();
+
+    axios
+      .post('/adminPosts', {
+        deletePost: true,
+        postID: postID
+      })
+      .then(response => {
+        console.log(response.data);
         this.getPosts();
         this.setState({ publish: true });
       });
@@ -244,11 +240,53 @@ class Admin extends React.Component {
     localStorage.clear();
   };
 
+  // searches for posts
+  searchPosts = e => {
+    e.preventDefault();
+    var searchInput = e.target.childNodes[0].value;
+    if (searchInput) {
+      axios
+        .post('/adminPosts', {
+          searchPosts: searchInput,
+          pageRequested: 1,
+          perPage: this.state.perPage
+        })
+        .then(response => {
+          if (response.data) {
+            if (response.data[0].nextPage) {
+              this.setState({ nextPage: true });
+            } else {
+              this.setState({ nextPage: false });
+            }
+            if (response.data[1].previousPage) {
+              this.setState({ previousPage: true });
+            } else {
+              this.setState({ previousPage: false });
+            }
+            response.data.shift();
+            response.data.shift();
+            this.setState({
+              currentPosts: JSON.stringify(response.data),
+              pageRequested: 1
+            });
+          }
+        });
+    } else {
+      this.setState({
+        currentPosts: this.state.initialPosts,
+        pageRequested: 1,
+        nextPage: this.state.initialNextPage,
+        previousPage: this.state.initialPreviousPage
+      });
+    }
+  };
+
   render() {
     let render;
     if (this.state.user) {
       return (
         <Dashboard
+          publish={this.state.publish}
           onLogout={this.handleLogout}
           posts={this.state.currentPosts}
           searchPosts={this.searchPosts}
@@ -256,7 +294,9 @@ class Admin extends React.Component {
           nextPage={this.state.nextPage}
           getPrevPage={this.getPrevPage}
           getNextPage={this.getNextPage}
+          createPost={this.createPost}
           updatePost={this.updatePost}
+          deletePost={this.deletePost}
         />
       );
     } else {

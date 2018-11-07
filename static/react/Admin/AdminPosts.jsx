@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Link, Route, Switch } from 'react-router-dom';
 import AdminPost from './AdminPost';
+import CreatePost from './CreatePost';
 
 class AdminPosts extends Component {
   constructor(props) {
@@ -9,23 +10,12 @@ class AdminPosts extends Component {
 
   render() {
     return (
-      <div className="adminPosts-container">
-        <div className="adminPosts-flex">
-          <div className="adminPosts-header">
-            <span className="headingThree bold">Manage your blog</span>
-          </div>
-          <div className="adminPosts-search">
-            <form
-              className="adminPosts-searchForm"
-              onSubmit={this.props.searchPosts}
-            >
-              <input type="text" placeholder="search posts" />
-              <input type="submit" value="search" />
-            </form>
-          </div>
-        </div>
-        <hr />
+      <>
         <Switch>
+          <Route
+            path="/admin/posts/create"
+            render={() => <CreatePost createPost={this.props.createPost} />}
+          />
           <Route
             path="/admin/posts/:postSlug"
             render={props => {
@@ -47,6 +37,7 @@ class AdminPosts extends Component {
                   postCategory={post.category}
                   postUser={post.user}
                   updatePost={this.props.updatePost}
+                  deletePost={this.props.deletePost}
                 />
               );
             }}
@@ -60,11 +51,12 @@ class AdminPosts extends Component {
                 nextPage={this.props.nextPage}
                 getNextPage={this.props.getNextPage}
                 getPrevPage={this.props.getPrevPage}
+                searchPosts={this.props.searchPosts}
               />
             )}
           />
         </Switch>
-      </div>
+      </>
     );
   }
 }
@@ -139,11 +131,33 @@ class AdminPostList extends Component {
     }
 
     return (
-      <div className="adminPosts-postsContainer">
-        <span className="headingTwo bold">Posts</span>
-        <ul className="adminPosts-postList">{posts}</ul>
-        {previousPage}
-        {nextPage}
+      <div className="adminPosts-container">
+        <div className="adminPosts-headerFlex">
+          <div className="adminPosts-header">
+            <span className="headingTwo bold">Posts</span>
+          </div>
+          <div className="adminPosts-headerSearch">
+            <form
+              className="adminPosts-searchForm"
+              onSubmit={this.props.searchPosts}
+            >
+              <input type="text" placeholder="search posts" />
+              <input type="submit" value="search" />
+            </form>
+          </div>
+        </div>
+        <div className="adminPosts-postsFlex">
+          <div className="adminPosts-posts">
+            <ul className="adminPosts-postList">{posts}</ul>
+            {previousPage}
+            {nextPage}
+          </div>
+          <div className="adminPosts-postsMenu">
+            <Link to="/admin/posts/create" className="mainLink">
+              Create Post
+            </Link>
+          </div>
+        </div>
       </div>
     );
   }
