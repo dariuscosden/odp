@@ -192,11 +192,13 @@ class PostTitleEditor extends Component {
   };
 
   handleEditedText = () => {
-    var editedText = this.reactQuill.current.editor.getText();
-    if (editedText == '') {
-      console.log('no text');
+    if (this.reactQuill.current) {
+      var editedText = this.reactQuill.current.editor.getText();
+      if (editedText == '') {
+        console.log('no text');
+      }
+      this.props.onEditText(editedText);
     }
-    this.props.onEditText(editedText);
   };
 
   render() {
@@ -208,9 +210,7 @@ class PostTitleEditor extends Component {
         theme="snow"
         defaultValue={this.props.postTitle}
         onChange={(content, delta, source, editor) => {
-          if (source === 'user') {
-            this.handleEditedText();
-          }
+          this.handleEditedText();
         }}
       />
     );
@@ -311,11 +311,13 @@ class PostBodyEditor extends Component {
   ];
 
   handleEditedText = () => {
-    var editedText = this.reactQuill.current.editor.getText();
-    if (editedText == '') {
-      console.log('no text');
+    if (this.reactQuill.current) {
+      var editedText = this.reactQuill.current.editor.getText();
+      if (editedText == '') {
+        console.log('no text');
+      }
+      this.props.onEditText(editedText);
     }
-    this.props.onEditText(editedText);
   };
 
   render() {
@@ -329,9 +331,7 @@ class PostBodyEditor extends Component {
         defaultValue={this.props.postBody}
         imageHandler={this.imageHandler}
         onChange={(content, delta, source, editor) => {
-          if (source === 'user') {
-            this.handleEditedText();
-          }
+          this.handleEditedText();
         }}
       />
     );
@@ -349,11 +349,13 @@ class PostCategoryEditor extends Component {
   };
 
   handleEditedText = () => {
-    var editedText = this.reactQuill.current.editor.getText();
-    if (editedText == '') {
-      console.log('no text');
+    if (this.reactQuill.current) {
+      var editedText = this.reactQuill.current.editor.getText();
+      if (editedText == '') {
+        console.log('no text');
+      }
+      this.props.onEditText(editedText);
     }
-    this.props.onEditText(editedText);
   };
 
   render() {
@@ -366,9 +368,7 @@ class PostCategoryEditor extends Component {
         formats={this.formats}
         defaultValue={this.props.postCategory}
         onChange={(content, delta, source, editor) => {
-          if (source === 'user') {
-            this.handleEditedText();
-          }
+          this.handleEditedText();
         }}
       />
     );
@@ -426,8 +426,9 @@ class PostImageEditor extends Component {
           })
           .then(response => {
             quill.enable(true);
-            quill.insertText(range.index, response.data.fileURL);
-            quill.setSelection(range.index + 1);
+            quill.setContents('');
+            quill.insertText(0, response.data.fileURL);
+            quill.setSelection(0);
             fileInput.value = '';
           })
           .catch(error => {
@@ -443,11 +444,13 @@ class PostImageEditor extends Component {
   }
 
   handleEditedText = () => {
-    var editedText = this.reactQuill.current.editor.getText();
-    if (editedText == '') {
-      console.log('no text');
+    if (this.reactQuill.current) {
+      var editedText = this.reactQuill.current.editor.getText();
+      if (editedText == '') {
+        console.log('no text');
+      }
+      this.props.onEditText(editedText);
     }
-    this.props.onEditText(editedText);
   };
 
   render() {
@@ -459,9 +462,7 @@ class PostImageEditor extends Component {
         modules={this.modules}
         defaultValue={this.props.postImage}
         onChange={(content, delta, source, editor) => {
-          if (source === 'user') {
-            this.handleEditedText();
-          }
+          this.handleEditedText();
         }}
       />
     );

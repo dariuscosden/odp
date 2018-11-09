@@ -74,8 +74,8 @@ class Admin extends React.Component {
   }
 
   getPostImageText() {
-    var postImageText = document.getElementById('postImageQuill').childNodes[0]
-      .childNodes[0].innerText;
+    var postImageText = document.getElementById('postImageQuill').childNodes[1]
+      .childNodes[0].childNodes[0].innerText;
     return postImageText;
   }
 

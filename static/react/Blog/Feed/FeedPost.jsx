@@ -8,10 +8,13 @@ class FeedPost extends Component {
 
   insertHTMLImage() {
     var divHTML = this.props.postImage;
+    if (divHTML.includes('div')) {
+      divHTML = divHTML.replace(/<(.|\n)*?>/g, '');
+    }
     var div = document.createElement('div');
     div.innerHTML = divHTML;
     if (this.props.postImage) {
-      return { __html: "<img src='" + div.childNodes[0].innerHTML + "' />" };
+      return { __html: "<img src='" + div.innerHTML + "' />" };
     }
   }
 
