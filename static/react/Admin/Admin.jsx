@@ -9,6 +9,7 @@ class Admin extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      message: false,
       user: false,
       error: false,
       publish: false,
@@ -72,6 +73,12 @@ class Admin extends React.Component {
     return postIdText;
   }
 
+  getPostImageText() {
+    var postImageText = document.getElementById('postImageQuill').childNodes[0]
+      .childNodes[0].innerText;
+    return postImageText;
+  }
+
   getPostTitleText() {
     var postTitleText = document.getElementById('postTitleQuill').childNodes[0]
       .childNodes[0].innerText;
@@ -82,6 +89,12 @@ class Admin extends React.Component {
     var postBodyHTML = document.getElementById('postBodyQuill').childNodes[1]
       .childNodes[0].innerHTML;
     return postBodyHTML;
+  }
+
+  getPostCategoryText() {
+    var postCategoryText = document.getElementById('postCategoryQuill')
+      .childNodes[0].childNodes[0].innerText;
+    return postCategoryText;
   }
 
   createPost = e => {
@@ -100,28 +113,43 @@ class Admin extends React.Component {
         postUser: postUser
       })
       .then(response => {
-        console.log(response.data);
         this.getPosts();
-        this.setState({ publish: true });
+        this.setState({
+          message: {
+            type: 'success',
+            content: 'Post has been successfully created'
+          },
+          publish: true
+        });
       });
   };
 
   updatePost = e => {
     e.preventDefault();
     var postID = this.getPostIdText();
+    var postImage = this.getPostImageText();
     var postTitle = this.getPostTitleText();
     var postBody = this.getPostBodyHTML();
+    var postCategory = this.getPostCategoryText();
 
     axios
       .post('/adminPosts', {
         updatePost: true,
         postID: postID,
+        postImage: postImage,
         postTitle: postTitle,
-        postBody: postBody
+        postBody: postBody,
+        postCategory: postCategory
       })
       .then(response => {
         this.getPosts();
-        this.setState({ publish: true });
+        this.setState({
+          message: {
+            type: 'success',
+            content: 'Post has been successfully updated'
+          },
+          publish: true
+        });
       });
   };
 
@@ -137,7 +165,13 @@ class Admin extends React.Component {
       .then(response => {
         console.log(response.data);
         this.getPosts();
-        this.setState({ publish: true });
+        this.setState({
+          message: {
+            type: 'success',
+            content: 'Post has been successfully deleted'
+          },
+          publish: true
+        });
       });
   };
 
@@ -286,6 +320,7 @@ class Admin extends React.Component {
     if (this.state.user) {
       return (
         <Dashboard
+          message={this.state.message}
           publish={this.state.publish}
           onLogout={this.handleLogout}
           posts={this.state.currentPosts}

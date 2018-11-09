@@ -11,6 +11,8 @@ class CreatePost extends Component {
   render() {
     return (
       <div className="createPost-container">
+        <a href="javascript:history.back()">Go Back</a>
+        <br />
         <span className="headingTwo accentColor bold">Create Post</span>
         <br />
         <span>Title</span>

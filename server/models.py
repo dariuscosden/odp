@@ -23,6 +23,7 @@ class Post(db.Model):
     body = db.Column(db.String(3000))
     dateCreated = db.Column(db.String(80))
     category = db.Column(db.String(80))
+    image = db.Column(db.String(160))
 
     # user relationship
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))

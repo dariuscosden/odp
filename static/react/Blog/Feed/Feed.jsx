@@ -24,6 +24,7 @@ class Feed extends React.Component {
             postTitle={post.title}
             postExcerp={post.excerp}
             postCategory={post.category}
+            postImage={post.image}
           />
         ))}
         {this.props.morePostsAvailable ? (

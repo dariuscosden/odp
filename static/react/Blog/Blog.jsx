@@ -49,6 +49,7 @@ class Blog extends React.Component {
                 path="/:postSlug"
                 render={props => {
                   const posts = JSON.parse(this.props.posts);
+                  console.log(posts);
                   const post = posts.find(
                     p => p.slug === props.match.params.postSlug
                   );
@@ -60,6 +61,7 @@ class Blog extends React.Component {
                       {...props}
                       postDateCreated={post.dateCreated}
                       postSlug={post.slug}
+                      postImage={post.image}
                       postTitle={post.title}
                       postBody={post.body}
                       postCategory={post.category}

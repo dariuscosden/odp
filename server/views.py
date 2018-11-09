@@ -1,10 +1,13 @@
 from flask import current_app as app
 from flask import render_template, redirect, request, url_for, flash, session
 from werkzeug.security import check_password_hash
+from werkzeug.utils import secure_filename
 from sqlalchemy import desc, or_
 from server.models import User, Post
 from server.database import db
 import json
+import datetime
+import os
 
  # jsonifies posts
 def jsonifyPosts(posts):
@@ -41,6 +44,7 @@ def jsonifyPosts(posts):
         d['excerp'] = excerp
         d['dateCreated'] = post.dateCreated
         d['category'] = post.category
+        d['image'] = post.image
         d['user'] = post.user.username
         jsonPosts.append(d)
 
@@ -157,9 +161,11 @@ def adminPosts():
             postTitle = data.get('postTitle')
             postBody = data.get('postBody')
             postCategory = data.get('postCategory')
+            postImage = data.get('postImage')
             postUser = data.get('postUser')
+            dateCreated = datetime.datetime.today().strftime('%Y-%m-%d')
             user = User.query.filter_by(username=postUser).first()
-            post = Post(title=postTitle, body=postBody, user=user, category=postCategory)
+            post = Post(title=postTitle, body=postBody, user=user, category=postCategory, image=postImage, dateCreated=dateCreated)
 
             db.session.add(post)
             db.session.commit()
@@ -172,11 +178,15 @@ def adminPosts():
             postID = data.get('postID')
             postTitle = data.get('postTitle')
             postBody = data.get('postBody')
+            postImage = data.get('postImage')
+            postCategory = data.get('postCategory')
             post = Post.query.filter_by(id=postID).first()
 
             # updates post
             post.title = postTitle
             post.body = postBody
+            post.image = postImage
+            post.category = postCategory
 
             db.session.commit()
 
@@ -185,6 +195,10 @@ def adminPosts():
                 d = {}
                 d['postTitle'] = postTitle
                 d['postBody'] = postBody
+                d['postImage'] = postImage
+                d['postCategory'] = postCategory
+                
+                print(postCategory)
 
                 return json.dumps(d)
             
@@ -200,5 +214,19 @@ def adminPosts():
 
             return json.dumps({"postStatus": 'deleted'})
             
+
+    return redirect(url_for('admin'))
+
+# handles the admin post route
+@app.route('/adminPost', methods=('GET', 'POST'))
+def adminPost():
+
+    if request.method == 'POST':
+        parentDir = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
+        file = request.files['file']
+        filename = secure_filename(file.filename)
+        file.save(os.path.join(parentDir, 'static/dist/images/{}'.format(filename)))
+
+        return json.dumps({"fileURL": url_for('static', filename="images/{}".format(filename))})
 
     return redirect(url_for('admin'))

@@ -62,6 +62,16 @@ class Dashboard extends React.Component {
             updatePost={this.props.updatePost}
             deletePost={this.props.deletePost}
           />
+          {this.props.message.type == 'success' ? (
+            <div className="adminMessageSuccess">
+              {this.props.message.content}
+            </div>
+          ) : null}
+          {this.props.message.type == 'error' ? (
+            <div className="adminMessageError">
+              {this.props.message.content}
+            </div>
+          ) : null}
         </div>
       </div>
     );

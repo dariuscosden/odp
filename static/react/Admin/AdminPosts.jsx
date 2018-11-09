@@ -35,6 +35,7 @@ class AdminPosts extends Component {
                   postTitle={post.title}
                   postBody={post.body}
                   postCategory={post.category}
+                  postImage={post.image}
                   postUser={post.user}
                   updatePost={this.props.updatePost}
                   deletePost={this.props.deletePost}

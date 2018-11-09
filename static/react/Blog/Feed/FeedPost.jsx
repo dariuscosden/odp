@@ -5,30 +5,51 @@ class FeedPost extends Component {
   constructor(props) {
     super(props);
   }
+
+  insertHTMLImage() {
+    var divHTML = this.props.postImage;
+    var div = document.createElement('div');
+    div.innerHTML = divHTML;
+    if (this.props.postImage) {
+      return { __html: "<img src='" + div.childNodes[0].innerHTML + "' />" };
+    }
+  }
+
+  insertHTMLBody() {
+    return { __html: this.props.postExcerp };
+  }
+
   render() {
     return (
-      <div className="postContainer">
-        <div className="postContainer-separator">
-          <div className="postContainer-separatorText">
+      <div className="feedPostContainer">
+        <div className="feedPostContainer-separator">
+          <div className="feedPostContainer-separatorText">
             {this.props.postCategory}
           </div>
         </div>
-        <div className="postContainer-img">
-          <img src="https://i.kinja-img.com/gawker-media/image/upload/s--IoFa6NEN--/c_scale,f_auto,fl_progressive,q_80,w_800/vub3vgkwxnuwwj36emni.jpg" />
-        </div>
-
-        <div className="postContainer-dateCreated">
+        {this.props.postImage ? (
+          <div
+            className="feedPostContainer-img"
+            dangerouslySetInnerHTML={this.insertHTMLImage()}
+          />
+        ) : null}
+        <div className="feedPostContainer-dateCreated">
           <small>
             <i>{this.props.postDateCreated}</i>
           </small>
         </div>
-        <div className="postContainer-title">
+        <div className="feedPostContainer-title">
           <Link to={'/' + this.props.postSlug}>{this.props.postTitle}</Link>
         </div>
-        <div className="postContainer-body">
-          {this.props.postExcerp}{' '}
-          <Link to={'/' + this.props.postSlug}>Article complet</Link>
-        </div>
+        <div
+          className="feedPostContainer-body"
+          dangerouslySetInnerHTML={this.insertHTMLBody()}
+        />
+        {this.props.postSlug ? (
+          <div className="feedPostContainer-readMore">
+            <Link to={'/' + this.props.postSlug}>Article complet</Link>
+          </div>
+        ) : null}
       </div>
     );
   }

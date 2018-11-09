@@ -4,11 +4,16 @@ class BlogPost extends Component {
   constructor(props) {
     super(props);
   }
+
+  insertHTMLBody() {
+    return { __html: this.props.postBody };
+  }
+
   render() {
     return (
       <div className="postContainer">
         <div className="postContainer-img">
-          <img src="https://i.kinja-img.com/gawker-media/image/upload/s--IoFa6NEN--/c_scale,f_auto,fl_progressive,q_80,w_800/vub3vgkwxnuwwj36emni.jpg" />
+          <img src={this.props.postImage} />
         </div>
 
         <div className="postContainer-dateCreated">
@@ -19,7 +24,10 @@ class BlogPost extends Component {
         <div className="postContainer-title">
           <h1>{this.props.postTitle}</h1>
         </div>
-        <div className="postContainer-body">{this.props.postBody}</div>
+        <div
+          className="postContainer-body"
+          dangerouslySetInnerHTML={this.insertHTMLBody()}
+        />
       </div>
     );
   }
