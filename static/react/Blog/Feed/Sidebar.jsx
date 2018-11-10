@@ -60,4 +60,13 @@ class SidebarRight extends Component {
   }
 }
 
-export { SidebarLeft, SidebarRight };
+class PostSidebarRight extends Component {
+  constructor(props) {
+    super(props);
+  }
+  render() {
+    return <div className="sidebarContainer" />;
+  }
+}
+
+export { SidebarLeft, SidebarRight, PostSidebarRight };

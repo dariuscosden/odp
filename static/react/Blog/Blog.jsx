@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
 import Header from './Header';
 import Soumettre from './Soumettre';
 import Feed from './Feed/Feed';
-import { SidebarLeft, SidebarRight } from './Feed/Sidebar';
+import { SidebarLeft, SidebarRight, PostSidebarRight } from './Feed/Sidebar';
 import BlogPost from './Post/BlogPost';
 
 // global blog component
@@ -49,7 +49,6 @@ class Blog extends React.Component {
                 path="/:postSlug"
                 render={props => {
                   const posts = JSON.parse(this.props.posts);
-                  console.log(posts);
                   const post = posts.find(
                     p => p.slug === props.match.params.postSlug
                   );
@@ -57,15 +56,19 @@ class Blog extends React.Component {
                     return null;
                   }
                   return (
-                    <BlogPost
-                      {...props}
-                      postDateCreated={post.dateCreated}
-                      postSlug={post.slug}
-                      postImage={post.image}
-                      postTitle={post.title}
-                      postBody={post.body}
-                      postCategory={post.category}
-                    />
+                    <>
+                      <SidebarLeft />
+                      <BlogPost
+                        {...props}
+                        postDateCreated={post.dateCreated}
+                        postSlug={post.slug}
+                        postImage={post.image}
+                        postTitle={post.title}
+                        postBody={post.body}
+                        postCategory={post.category}
+                      />
+                      <PostSidebarRight />
+                    </>
                   );
                 }}
               />

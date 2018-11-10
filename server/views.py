@@ -158,6 +158,7 @@ def adminPosts():
 
         # handles create post
         if data.get('createPost'):
+            postImage = data.get('postImage')
             postTitle = data.get('postTitle')
             postBody = data.get('postBody')
             postCategory = data.get('postCategory')

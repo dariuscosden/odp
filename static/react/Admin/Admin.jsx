@@ -99,14 +99,16 @@ class Admin extends React.Component {
 
   createPost = e => {
     e.preventDefault();
+    var postImage = this.getPostImageText();
     var postTitle = this.getPostTitleText();
     var postBody = this.getPostBodyHTML();
-    var postCategory = 'Nouvelles';
+    var postCategory = this.getPostCategoryText();
     var postUser = this.state.user.username;
 
     axios
       .post('/adminPosts', {
         createPost: true,
+        postImage: postImage,
         postTitle: postTitle,
         postBody: postBody,
         postCategory: postCategory,
@@ -121,6 +123,9 @@ class Admin extends React.Component {
           },
           publish: true
         });
+        setTimeout(() => {
+          this.setState({ message: false });
+        }, 5000);
       });
   };
 
@@ -150,6 +155,9 @@ class Admin extends React.Component {
           },
           publish: true
         });
+        setTimeout(() => {
+          this.setState({ message: false });
+        }, 5000);
       });
   };
 
@@ -172,6 +180,9 @@ class Admin extends React.Component {
           },
           publish: true
         });
+        setTimeout(() => {
+          this.setState({ message: false });
+        }, 5000);
       });
   };
 

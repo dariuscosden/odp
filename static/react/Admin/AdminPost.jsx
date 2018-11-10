@@ -147,15 +147,18 @@ class AdminPost extends React.Component {
                   onEditText={this.updateBody}
                 />
               </div>
-              <a href="" className="mainButton" onClick={this.props.updatePost}>
-                Save Changes
-              </a>
+              <center>
+                <a
+                  href=""
+                  className="mainButton"
+                  onClick={this.props.updatePost}
+                >
+                  Save Changes
+                </a>
+              </center>
             </div>
           </div>
           <div className="adminPost-postDetails">
-            <span className="headingTwo bold">
-              <center>Post Preview</center>
-            </span>
             <div className="adminPost-postPreview">
               <FeedPost
                 postDateCreated={this.props.postDateCreated}
