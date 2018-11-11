@@ -13,6 +13,8 @@ class Admin extends React.Component {
       user: false,
       error: false,
       publish: false,
+
+      // posts
       perPage: 20,
       pageRequested: 1,
       initialPosts: false,
@@ -20,7 +22,13 @@ class Admin extends React.Component {
       initialNextPage: false,
       nextPage: false,
       initialPreviousPage: false,
-      previousPage: false
+      previousPage: false,
+
+      // users
+      usersPerPage: 20,
+      usersPageRequested: 1,
+      initialUsers: false,
+      currentUsers: false
     };
   }
 
@@ -35,7 +43,141 @@ class Admin extends React.Component {
       }
     }
     this.getPosts();
+    this.getUsers();
   }
+
+  // gets initial users from python
+  getUsers = () => {
+    axios
+      .post('/admin', {
+        users: true
+      })
+      .then(response => {
+        this.setState({
+          initialUsers: JSON.stringify(response.data),
+          currentUsers: JSON.stringify(response.data)
+        });
+      });
+  };
+
+  // gets the user info
+  getUserIdText() {
+    var userIdText = document.getElementById('userID').innerText;
+    return userIdText;
+  }
+
+  // gets the username
+  getUsernameText() {
+    var usernameText = document.getElementById('usernameQuill').childNodes[0]
+      .childNodes[0].innerText;
+    if (usernameText.length <= 1) {
+      usernameText = false;
+    }
+    return usernameText;
+  }
+
+  // gets the password
+  getUserPasswordText() {
+    var passwordText = document.getElementById('userPasswordQuill')
+      .childNodes[0].childNodes[0].innerText;
+    if (passwordText.length <= 1) {
+      passwordText = false;
+    }
+    return passwordText;
+  }
+
+  // creates user
+  createUser = e => {
+    e.preventDefault();
+    var username = this.getUsernameText();
+    var userPassword = this.getUserPasswordText();
+
+    if (!username || !userPassword) {
+      this.setState({
+        message: {
+          type: 'error',
+          content: 'Please fill in all the required fields'
+        }
+      });
+      setTimeout(() => {
+        this.setState({ message: false });
+      }, 5000);
+      return false;
+    }
+
+    axios
+      .post('/adminUsers', {
+        createUser: true,
+        username: username,
+        userPassword: userPassword
+      })
+      .then(response => {
+        this.getPosts();
+        this.setState({
+          message: {
+            type: 'success',
+            content: 'User has been successfully created'
+          },
+          publish: true
+        });
+        setTimeout(() => {
+          this.setState({ message: false });
+        }, 5000);
+      });
+  };
+
+  // updates the user
+  updateUser = e => {
+    e.preventDefault();
+    var userID = this.getUserIdText();
+    var username = this.getUsernameText();
+
+    axios
+      .post('/adminUsers', {
+        updateUser: true,
+        userID: userID,
+        username: username
+      })
+      .then(response => {
+        this.getUsers();
+        this.setState({
+          message: {
+            type: 'success',
+            content: 'User has been successfully updated'
+          },
+          publish: true
+        });
+        setTimeout(() => {
+          this.setState({ message: false });
+        }, 5000);
+      });
+  };
+
+  // deletes a user
+  deleteUser = e => {
+    e.preventDefault();
+    var userID = this.getUserIdText();
+
+    axios
+      .post('/adminUsers', {
+        deleteUser: true,
+        userID: userID
+      })
+      .then(response => {
+        console.log(response.data);
+        this.getUsers();
+        this.setState({
+          message: {
+            type: 'success',
+            content: 'User has been successfully deleted'
+          },
+          publish: true
+        });
+        setTimeout(() => {
+          this.setState({ message: false });
+        }, 5000);
+      });
+  };
 
   // gets initial posts from python
   getPosts = () => {
@@ -334,6 +476,7 @@ class Admin extends React.Component {
           message={this.state.message}
           publish={this.state.publish}
           onLogout={this.handleLogout}
+          // posts
           posts={this.state.currentPosts}
           searchPosts={this.searchPosts}
           previousPage={this.state.previousPage}
@@ -343,6 +486,11 @@ class Admin extends React.Component {
           createPost={this.createPost}
           updatePost={this.updatePost}
           deletePost={this.deletePost}
+          // users
+          users={this.state.currentUsers}
+          createUser={this.createUser}
+          updateUser={this.updateUser}
+          deleteUser={this.deleteUser}
         />
       );
     } else {

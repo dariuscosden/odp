@@ -1,9 +1,6 @@
 {
   "folders": [
     {
-      "path": "/Users/dariusmandres/Desktop/projects/misc/protos"
-    },
-    {
       "path": "/Users/dariusmandres/Desktop/projects/flask-projects/flask-react-template"
     },
     {
@@ -11,6 +8,9 @@
     },
     {
       "path": "."
+    },
+    {
+      "path": "/Users/dariusmandres/Desktop/projects/misc/protos"
     }
   ],
   "settings": {

@@ -7,6 +7,7 @@ class User(db.Model):
     username = db.Column(db.String(80))
     password = db.Column(db.String(80))
     email = db.Column(db.String(160))
+    category = db.Column(db.String(80))
 
     # posts relationship
     posts = db.relationship('Post', back_populates='user')

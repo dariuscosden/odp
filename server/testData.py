@@ -9,7 +9,7 @@ def populate():
     # populates users
     users = User.query.all()
     if not users:
-        user = User(username='admin', password=generate_password_hash('123'), email='admin@ouatedephoque.ca')
+        user = User(username='admin', password=generate_password_hash('123'), email='admin@ouatedephoque.ca', category='administrator')
         db.session.add(user)
     else:
         user = User.query.filter_by(username='admin').first()

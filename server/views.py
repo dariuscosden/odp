@@ -1,6 +1,6 @@
 from flask import current_app as app
 from flask import render_template, redirect, request, url_for, flash, session
-from werkzeug.security import check_password_hash
+from werkzeug.security import check_password_hash, generate_password_hash
 from werkzeug.utils import secure_filename
 from sqlalchemy import desc, or_
 from server.models import User, Post
@@ -50,6 +50,19 @@ def jsonifyPosts(posts):
 
     return json.dumps(jsonPosts)
 
+# jsonifies users
+def jsonifyUsers(users):
+    jsonUsers = [] 
+
+    for user in users:
+        d = {}
+        d['id'] = user.id
+        d['username'] = user.username
+        d['category'] = user.category
+        jsonUsers.append(d)
+
+    return json.dumps(jsonUsers)
+
 # renders index.html
 @app.route('/', methods=('GET', 'POST'), endpoint='home')
 @app.route('/admin', methods=('GET', 'POST'), endpoint='admin')
@@ -78,6 +91,12 @@ def index():
                     return json.dumps({'authenticated': False})
             else:
                 return json.dumps({'authenticated': False})
+
+        # users
+        if data.get('users'):
+            users = User.query.order_by(User.username).all()
+
+            return jsonifyUsers(users)
 
         # posts
         if data.get('posts'):
@@ -198,8 +217,6 @@ def adminPosts():
                 d['postBody'] = postBody
                 d['postImage'] = postImage
                 d['postCategory'] = postCategory
-                
-                print(postCategory)
 
                 return json.dumps(d)
             
@@ -231,3 +248,57 @@ def adminPost():
         return json.dumps({"fileURL": url_for('static', filename="images/{}".format(filename))})
 
     return redirect(url_for('admin'))
+
+# handles the admin users route
+@app.route('/adminUsers', methods=('GET', 'POST'))
+def adminUsers():
+
+    if request.method == 'POST':
+        data = request.get_json()
+
+        # handles the create user
+        if data.get('createUser'):
+            username = data.get('username')
+            userPassword = data.get('userPassword')
+            user = User(username=username, password=generate_password_hash(userPassword), category='administrator')
+
+            db.session.add(user)
+            db.session.commit()
+
+            return json.dumps({"postCreated": True})
+
+        # handles the delete user
+        if data.get('deleteUser'):
+            userID = data.get('userID')
+            user = User.query.filter_by(id=userID).first()
+            posts = Post.query.filter_by(user=user).all()
+
+            # deletes all post from user
+            for post in posts:
+                db.session.delete(post)
+
+            db.session.delete(user)
+
+            db.session.commit()
+
+            return json.dumps({"userStatus": 'deleted'})
+
+        # handles the update user
+        if data.get('updateUser'):
+            userID = data.get('userID')
+            username = data.get('username')
+            user = User.query.filter_by(id=userID).first()
+
+            # updates user
+            user.username = username
+
+            db.session.commit()
+
+            # returns updated user to react
+            def updateReact():
+                d = {}
+                d['username'] = username
+
+                return json.dumps(d)
+            
+            return updateReact()

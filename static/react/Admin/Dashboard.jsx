@@ -4,6 +4,7 @@ import { Logout } from '../Auth/Auth';
 import AdminPosts from './AdminPosts';
 import AdminPost from './AdminPost';
 import { AdminLink } from '../Blog/Links';
+import AdminUsers from '..//Auth/AdminUsers';
 
 // admin dashboard component
 class Dashboard extends React.Component {
@@ -51,17 +52,37 @@ class Dashboard extends React.Component {
             </div>
           </div>
           <hr />
-          <AdminPosts
-            posts={this.props.posts}
-            searchPosts={this.props.searchPosts}
-            nextPage={this.props.nextPage}
-            previousPage={this.props.previousPage}
-            getPrevPage={this.props.getPrevPage}
-            getNextPage={this.props.getNextPage}
-            createPost={this.props.createPost}
-            updatePost={this.props.updatePost}
-            deletePost={this.props.deletePost}
-          />
+          <Switch>
+            <Route
+              path="/admin/posts"
+              render={() => (
+                <AdminPosts
+                  posts={this.props.posts}
+                  searchPosts={this.props.searchPosts}
+                  nextPage={this.props.nextPage}
+                  previousPage={this.props.previousPage}
+                  getPrevPage={this.props.getPrevPage}
+                  getNextPage={this.props.getNextPage}
+                  createPost={this.props.createPost}
+                  updatePost={this.props.updatePost}
+                  deletePost={this.props.deletePost}
+                />
+              )}
+            />
+            <Route
+              path="/admin/users"
+              render={() => (
+                <AdminUsers
+                  users={this.props.users}
+                  usersPreviousPage={this.props.usersPreviousPage}
+                  usersNextPage={this.props.usersNextPage}
+                  createUser={this.props.createUser}
+                  updateUser={this.props.updateUser}
+                  deleteUser={this.props.deleteUser}
+                />
+              )}
+            />
+          </Switch>
           {this.props.message.type == 'success' ? (
             <div className="adminMessageSuccess">
               {this.props.message.content}
