@@ -1,33 +1,32 @@
 import React, { Component } from 'react';
-import {
-  UserCategoryEditor,
-  UsernameEditor,
-  UserPasswordEditor,
-  UserEmailEditor
-} from './AdminUser';
 
 class CreateUser extends Component {
   constructor(props) {
     super(props);
   }
+
   render() {
     return (
       <div className="adminPost-flex">
         <div className="adminPost-postEdit">
           <div className="adminPost-header">
             <div className="adminPost-title">
-              <a href="javascript:history.back()">Go Back</a>
+              <a className="mainLink" href="javascript:history.back()">
+                ←
+              </a>
               <br />
               <span className="headingOneHalf">Username</span>
-              <UsernameEditor />
+              <br />
+              <input id="createUserUsername" type="text" />
             </div>
             <div className="adminPost-password">
               <span className="headingOneHalf">Password</span>
-              <UserPasswordEditor />
+              <br />
+              <input id="createUserPassword" type="password" />
             </div>
             <center>
               <a href="" className="mainButton" onClick={this.props.createUser}>
-                Save Changes
+                Create User
               </a>
             </center>
           </div>

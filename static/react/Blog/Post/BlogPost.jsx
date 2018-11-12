@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 
 class BlogPost extends Component {
   constructor(props) {
@@ -12,6 +13,11 @@ class BlogPost extends Component {
   render() {
     return (
       <div className="postContainer">
+        <Link to="/" className="mainLink">
+          ←
+        </Link>
+        <br />
+        <br />
         <div className="postContainer-img">
           <img src={this.props.postImage} />
         </div>
@@ -22,7 +28,7 @@ class BlogPost extends Component {
           </small>
         </div>
         <div className="postContainer-title">
-          <h1>{this.props.postTitle}</h1>
+          <span className="headingTwo bold">{this.props.postTitle}</span>
         </div>
         <div
           className="postContainer-body"

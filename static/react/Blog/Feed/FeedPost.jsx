@@ -25,20 +25,22 @@ class FeedPost extends Component {
   render() {
     return (
       <div className="feedPostContainer">
-        <div className="feedPostContainer-separator">
-          <div className="feedPostContainer-separatorText">
-            {this.props.postCategory}
-          </div>
-        </div>
         {this.props.postImage ? (
-          <div
-            className="feedPostContainer-img"
-            dangerouslySetInnerHTML={this.insertHTMLImage()}
-          />
+          <Link to={'/' + this.props.postSlug}>
+            <div
+              className="feedPostContainer-img"
+              dangerouslySetInnerHTML={this.insertHTMLImage()}
+            />
+          </Link>
         ) : null}
         <div className="feedPostContainer-dateCreated">
           <small>
-            <i>{this.props.postDateCreated}</i>
+            <i>{this.props.postDateCreated}</i> >{' '}
+            <span className="funkyColor">
+              <b>
+                <i>{this.props.postCategory}</i>
+              </b>
+            </span>
           </small>
         </div>
         <div className="feedPostContainer-title">
@@ -50,7 +52,9 @@ class FeedPost extends Component {
         />
         {this.props.postSlug ? (
           <div className="feedPostContainer-readMore">
-            <Link to={'/' + this.props.postSlug}>Article complet</Link>
+            <Link className="mainLink" to={'/' + this.props.postSlug}>
+              Article complet
+            </Link>
           </div>
         ) : null}
       </div>

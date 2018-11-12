@@ -38,7 +38,9 @@ class AdminUser extends Component {
       <>
         <div className="adminPost-topPostInfo">
           <div className="adminPost-topPostInfo-left">
-            <a href="javascript:history.back()">Go Back</a>
+            <a className="mainLink" href="javascript:history.back()">
+              ←
+            </a>
           </div>
           <div className="adminPost-topPostInfo-right">
             <small>
@@ -97,13 +99,15 @@ class AdminUser extends Component {
           <div className="adminPost-postEdit">
             <div className="adminPost-header">
               <div className="adminPost-title">
+                <br />
                 <span className="headingOneHalf">Username</span>
-                <UsernameEditor
-                  ref={this.usernameEditor}
-                  username={this.props.username}
-                  onEditText={this.updateUsername}
-                  enableEdits={true}
-                />
+                <br />
+                <input id="createUserUsername" type="text" />
+              </div>
+              <div className="adminPost-password">
+                <span className="headingOneHalf">New Password</span>
+                <br />
+                <input id="createUserPassword" type="password" />
               </div>
               <center>
                 <a

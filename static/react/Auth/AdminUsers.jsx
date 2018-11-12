@@ -27,6 +27,7 @@ class AdminUsers extends Component {
                 {...props}
                 userID={user.id}
                 username={user.username}
+                userPassword={user.password}
                 userCategory={user.category}
                 updateUser={this.props.updateUser}
                 deleteUser={this.props.deleteUser}
@@ -58,7 +59,9 @@ class AdminUserList extends Component {
   render() {
     const users = JSON.parse(this.props.users).map(user => (
       <li key={user.id}>
-        <Link to={'/admin/users/' + user.id}>{user.username}</Link>
+        <Link className="mainLink" to={'/admin/users/' + user.id}>
+          {user.username}
+        </Link>
       </li>
     ));
     return (

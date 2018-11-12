@@ -62,7 +62,9 @@ class AdminPost extends React.Component {
       <>
         <div className="adminPost-topPostInfo">
           <div className="adminPost-topPostInfo-left">
-            <a href="javascript:history.back()">Go Back</a>
+            <a className="mainLink" href="javascript:history.back()">
+              ←
+            </a>
           </div>
           <div className="adminPost-topPostInfo-right">
             <small>

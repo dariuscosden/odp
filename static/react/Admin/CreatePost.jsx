@@ -55,7 +55,9 @@ class CreatePost extends Component {
       <>
         <div className="adminPost-topPostInfo">
           <div className="adminPost-topPostInfo-left">
-            <a href="javascript:history.back()">Go Back</a>
+            <a className="mainLink" href="javascript:history.back()">
+              ←
+            </a>
           </div>
         </div>
         <div className="adminPost-flex">

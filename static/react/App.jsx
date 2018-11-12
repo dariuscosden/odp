@@ -2,6 +2,12 @@ import React, { Component } from 'react';
 import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
 import Blog from './Blog/Blog';
 import Admin from './Admin/Admin';
+import {
+  SidebarLeft,
+  SidebarRight,
+  PostSidebarRight
+} from './Blog/Feed/Sidebar';
+import BlogPost from './Blog/Post/BlogPost';
 
 const axios = require('axios');
 
@@ -24,7 +30,7 @@ class App extends React.Component {
   // gets initial posts from python
   getPosts = () => {
     axios
-      .post(window.location.href, {
+      .post('/admin', {
         posts: true,
         perPage: this.state.perPage
       })
@@ -46,7 +52,7 @@ class App extends React.Component {
     e.preventDefault();
     this.setState({ perPage: (this.state.perPage += 10) });
     axios
-      .post(window.location.href, {
+      .post('/admin', {
         posts: true,
         perPage: this.state.perPage
       })

@@ -76,7 +76,10 @@ class AdminPostList extends Component {
   render() {
     const posts = JSON.parse(this.props.posts).map(post => (
       <li key={post.id}>
-        <Link to={'/admin/posts/' + post.slug}>{post.title}</Link> <br />
+        <Link className="mainLink" to={'/admin/posts/' + post.slug}>
+          {post.title}
+        </Link>{' '}
+        <br />
         <small>
           <i>{post.dateCreated}</i>
         </small>

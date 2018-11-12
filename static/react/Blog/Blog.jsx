@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
-import Header from './Header';
+import Header, { SubHeader } from './Header';
 import Soumettre from './Soumettre';
 import Feed from './Feed/Feed';
 import { SidebarLeft, SidebarRight, PostSidebarRight } from './Feed/Sidebar';
@@ -22,8 +22,11 @@ class Blog extends React.Component {
   render() {
     return (
       <>
-        <Header getHeight={this.getHeaderHeight} />
-        <div style={this.state.marginTop} className="backgroundContainer">
+        <Header />
+        <div className="subHeaderContainer" style={this.state.marginTop}>
+          <SubHeader />
+        </div>
+        <div className="backgroundContainer">
           <div className="container">
             <div className="blogContainer">
               <Route
@@ -45,33 +48,38 @@ class Blog extends React.Component {
                 )}
               />
               <Route path="/soumettre" component={Soumettre} />
-              <Route
-                path="/:postSlug"
-                render={props => {
-                  const posts = JSON.parse(this.props.posts);
-                  const post = posts.find(
-                    p => p.slug === props.match.params.postSlug
-                  );
-                  if (!post) {
-                    return null;
-                  }
-                  return (
-                    <>
-                      <SidebarLeft />
-                      <BlogPost
-                        {...props}
-                        postDateCreated={post.dateCreated}
-                        postSlug={post.slug}
-                        postImage={post.image}
-                        postTitle={post.title}
-                        postBody={post.body}
-                        postCategory={post.category}
-                      />
-                      <PostSidebarRight />
-                    </>
-                  );
-                }}
-              />
+              {this.props.posts ? (
+                <Route
+                  path="/:postSlug"
+                  render={props => {
+                    const posts = JSON.parse(this.props.posts);
+                    const post = posts.find(
+                      p => p.slug === props.match.params.postSlug
+                    );
+                    if (!post) {
+                      return null;
+                    }
+                    return (
+                      <>
+                        <SidebarLeft />
+                        <BlogPost
+                          {...props}
+                          postDateCreated={post.dateCreated}
+                          postSlug={post.slug}
+                          postImage={post.image}
+                          postTitle={post.title}
+                          postBody={post.body}
+                          postCategory={post.category}
+                        />
+                        <PostSidebarRight
+                          posts={this.props.posts}
+                          postID={post.id}
+                        />
+                      </>
+                    );
+                  }}
+                />
+              ) : null}
             </div>
           </div>
         </div>

@@ -7,27 +7,28 @@ class Header extends React.Component {
     this.header = React.createRef();
   }
 
-  componentDidMount = () => {
-    this.props.getHeight(this.header.current);
-  };
+  // componentDidMount = () => {
+  //   this.props.getHeight(this.header.current);
+  // };
 
   render() {
     return (
-      <div ref={this.header} className="headerContainer-fixed">
-        <div className="headerContainer">
-          <div className="container">
-            <div className="headerContainer-flex">
-              <div className="headerContainer-logo">
-                <h1>Ouate de phoque</h1>
+      <>
+        <div ref={this.header} className="headerContainer-fixed">
+          <div className="headerContainer">
+            <div className="container">
+              <div className="headerContainer-flex">
+                <div className="headerContainer-logo">
+                  <h1>Ouate de phoque</h1>
+                </div>
+                <div className="headerContainer-phoque">
+                  <img src="dist/images/odp-phoque.png" />
+                </div>
               </div>
-              {/* <div className="headerContainer-phoque">
-                <img src="dist/images/odp-phoque.png" />
-              </div> */}
             </div>
           </div>
         </div>
-        <SubHeader />
-      </div>
+      </>
     );
   }
 }
@@ -41,17 +42,22 @@ class SubHeader extends Component {
 
   render() {
     return (
-      <div className="subHeaderContainer">
-        <div className="container">
-          <div className="subHeader-menuContainer">
-            <HeaderLink exact to="/">
-              Acceuil
-            </HeaderLink>
-            <HeaderLink to="/facebook">Facebook</HeaderLink>
-            <HeaderLink to="/soumettre">Soumettre</HeaderLink>
+      <div className="container">
+        <div className="subHeader-flex">
+          <div className="subHeader-left20">
+            <div className="float-left">Suivez-nous!</div>
+            <div className="float-right">
+              <a target="_blank" href="https://www.facebook.com/ouatedephoque/">
+                <i className="fab fa-facebook-f" />
+              </a>
+            </div>
           </div>
+          <div className="subHeader-middle60" />
+          <div className="subHeader-right20">En savoir plus</div>
         </div>
       </div>
     );
   }
 }
+
+export { SubHeader };

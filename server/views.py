@@ -9,6 +9,12 @@ import json
 import datetime
 import os
 
+
+# favicon
+@app.route('/favicon.ico')
+def favicon():
+    return url_for('static', filename='favicon.ico')
+
  # jsonifies posts
 def jsonifyPosts(posts):
     jsonPosts = []
@@ -130,6 +136,15 @@ def index():
 
     return render_template('index.html')
 
+# gets individual post
+@app.route('/<postSlug>', methods=('GET', 'POST'))
+def getPost(postSlug):
+    post = Post.query.filter_by(slug=postSlug).first()
+
+    if post:
+        return render_template('index.html')
+        
+
 # handles logout
 @app.route('/logout')
 def logout():
@@ -210,17 +225,7 @@ def adminPosts():
 
             db.session.commit()
 
-            # returns updated post to react
-            def updateReact():
-                d = {}
-                d['postTitle'] = postTitle
-                d['postBody'] = postBody
-                d['postImage'] = postImage
-                d['postCategory'] = postCategory
-
-                return json.dumps(d)
-            
-            return updateReact()
+            return json.dumps({'postUpdated': True})
 
         # handles delete post
         if data.get('deletePost'):
@@ -230,7 +235,7 @@ def adminPosts():
 
             db.session.commit()
 
-            return json.dumps({"postStatus": 'deleted'})
+            return json.dumps({"postDeleted": True})
             
 
     return redirect(url_for('admin'))
@@ -260,12 +265,15 @@ def adminUsers():
         if data.get('createUser'):
             username = data.get('username')
             userPassword = data.get('userPassword')
-            user = User(username=username, password=generate_password_hash(userPassword), category='administrator')
+            userExists = User.query.filter_by(username=username).first()
 
-            db.session.add(user)
-            db.session.commit()
-
-            return json.dumps({"postCreated": True})
+            if userExists:
+                return json.dumps({"userExists": True})
+            else:
+                user = User(username=username, password=generate_password_hash(userPassword), category='administrator')
+                db.session.add(user)
+                db.session.commit()
+                return json.dumps({"postCreated": True})
 
         # handles the delete user
         if data.get('deleteUser'):
@@ -281,24 +289,29 @@ def adminUsers():
 
             db.session.commit()
 
-            return json.dumps({"userStatus": 'deleted'})
+            return json.dumps({"userDeleted": True})
 
         # handles the update user
         if data.get('updateUser'):
             userID = data.get('userID')
             username = data.get('username')
+            userPassword = data.get('userPassword')
             user = User.query.filter_by(id=userID).first()
+            otherUsers = User.query.filter_by(username=username).all()
+            userStatus = {'usernameExists': False}
 
-            # updates user
-            user.username = username
+            for x in otherUsers:
+                if x.id != user.id:
+                    userStatus['usernameExists'] = True
+                    break
 
-            db.session.commit()
+            if userStatus['usernameExists']:
+                return json.dumps({'userExists': True})
+            else:
+                # updates user
+                user.username = username
+                user.password = generate_password_hash(userPassword)
 
-            # returns updated user to react
-            def updateReact():
-                d = {}
-                d['username'] = username
+                db.session.commit()
 
-                return json.dumps(d)
-            
-            return updateReact()
+            return json.dumps({'userCreated': True})

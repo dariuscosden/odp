@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import SidebarPost from '../Post/SidebarPost';
 
 const axios = require('axios');
 
@@ -9,7 +10,7 @@ class SidebarLeft extends Component {
   }
   render() {
     return (
-      <div className="sidebarContainer">
+      <div className="sidebarContainer-left">
         <img src="http://www.ecstudents.net/10fall/kevinpost/archive/photoshop/gif_ads/9000th-winner-animated-2.gif" />
       </div>
     );
@@ -42,7 +43,7 @@ class SidebarRight extends Component {
   render() {
     return (
       <div className="sidebarContainer">
-        <h2>Catégories</h2>
+        <span className="headingOneHalf bold">Catégories</span>
         {this.state.categories
           ? this.state.categories.map(category => (
               <a
@@ -65,7 +66,30 @@ class PostSidebarRight extends Component {
     super(props);
   }
   render() {
-    return <div className="sidebarContainer" />;
+    // gets posts from props
+    var jsonPosts = JSON.parse(this.props.posts);
+    var arr = [];
+    Object.keys(jsonPosts).forEach(key => {
+      if (arr.length <= 10 && jsonPosts[key].id != this.props.postID) {
+        arr.push(jsonPosts[key]);
+      }
+    });
+
+    return (
+      <div className="sidebarContainer">
+        <div className="sidebarPost-flex">
+          {arr.map(post => (
+            <SidebarPost
+              key={post.id}
+              postSlug={post.slug}
+              postTitle={post.title}
+              postCategory={post.category}
+              postImage={post.image}
+            />
+          ))}
+        </div>
+      </div>
+    );
   }
 }
 

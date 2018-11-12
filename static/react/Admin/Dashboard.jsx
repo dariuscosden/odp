@@ -28,7 +28,7 @@ class Dashboard extends React.Component {
             User Area
           </AdminLink>
           <AdminLink exact to="/">
-            Back
+            Blog
           </AdminLink>
           <Logout onLogout={this.props.onLogout} />
         </div>
@@ -41,11 +41,11 @@ class Dashboard extends React.Component {
               <div className="adminDashboardHeader-menuItem">
                 {this.props.publish ? (
                   <a href="/admin" className="accentColor">
-                    Publish website
+                    Publish
                   </a>
                 ) : (
                   <span className="noselect">
-                    <i>Website published</i>
+                    <i>Published</i>
                   </span>
                 )}
               </div>

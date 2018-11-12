@@ -68,8 +68,7 @@ class Admin extends React.Component {
 
   // gets the username
   getUsernameText() {
-    var usernameText = document.getElementById('usernameQuill').childNodes[0]
-      .childNodes[0].innerText;
+    var usernameText = document.getElementById('createUserUsername').value;
     if (usernameText.length <= 1) {
       usernameText = false;
     }
@@ -78,8 +77,7 @@ class Admin extends React.Component {
 
   // gets the password
   getUserPasswordText() {
-    var passwordText = document.getElementById('userPasswordQuill')
-      .childNodes[0].childNodes[0].innerText;
+    var passwordText = document.getElementById('createUserPassword').value;
     if (passwordText.length <= 1) {
       passwordText = false;
     }
@@ -112,14 +110,23 @@ class Admin extends React.Component {
         userPassword: userPassword
       })
       .then(response => {
-        this.getPosts();
-        this.setState({
-          message: {
-            type: 'success',
-            content: 'User has been successfully created'
-          },
-          publish: true
-        });
+        if (!response.data.userExists) {
+          this.getUsers();
+          this.setState({
+            message: {
+              type: 'success',
+              content: 'User has been successfully created.'
+            },
+            publish: true
+          });
+        } else {
+          this.setState({
+            message: {
+              type: 'error',
+              content: 'User already exists.'
+            }
+          });
+        }
         setTimeout(() => {
           this.setState({ message: false });
         }, 5000);
@@ -131,22 +138,30 @@ class Admin extends React.Component {
     e.preventDefault();
     var userID = this.getUserIdText();
     var username = this.getUsernameText();
+    var userPassword = this.getUserPasswordText();
 
     axios
       .post('/adminUsers', {
         updateUser: true,
         userID: userID,
-        username: username
+        username: username,
+        userPassword: userPassword
       })
       .then(response => {
-        this.getUsers();
-        this.setState({
-          message: {
-            type: 'success',
-            content: 'User has been successfully updated'
-          },
-          publish: true
-        });
+        if (response.data.userExists) {
+          this.setState({
+            message: { type: 'error', content: 'Username already taken.' }
+          });
+        } else {
+          this.getUsers();
+          this.setState({
+            message: {
+              type: 'success',
+              content: 'User has been successfully updated'
+            },
+            publish: true
+          });
+        }
         setTimeout(() => {
           this.setState({ message: false });
         }, 5000);
@@ -394,7 +409,7 @@ class Admin extends React.Component {
     // sends data to python
     axios({
       method: 'post',
-      url: window.location.href,
+      url: '/admin',
       data: { loginFormInput }
     })
       .then(response => {
