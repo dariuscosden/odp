@@ -3,7 +3,7 @@ venv/
 *.pyc
 __pycache__/
 
-instancee/
+instance/
 
 .pytest_cache/
 .coverage
@@ -16,9 +16,10 @@ build/
 .DS_Store
 
 .flaskenv
-confige.py
+config.py
 
 .vscode/
+.code-workspace
 
 checklist.txt
 notes.txt
