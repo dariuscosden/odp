@@ -43,7 +43,7 @@ class Post(db.Model):
 
 # ad model
 class Ad(db.Model):
-    id = db.Column(db.String, primary_key=True)
+    id = db.Column(db.String(80), primary_key=True)
     title = db.Column(db.String(160))
     type = db.Column(db.String(80))
     content = db.Column(db.String(1000))
