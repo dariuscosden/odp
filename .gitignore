@@ -1,27 +1,29 @@
-venv/
-
+# python files
 *.pyc
 __pycache__/
-
-instance/
-
 .pytest_cache/
-.coverage
-htmlcov/
 
-dist/
-build/
-*.egg-info/
-
-.DS_Store
-
+# flask
 .flaskenv
 config.py
 
+# instance folder
+instance/
+
+# react
+node_modules/
+
+# vscode files
 .vscode/
 *.code-workspace
 
+# personal files
 checklist.txt
 notes.txt
 
-node_modules/
+# misc
+.coverage
+htmlcov/
+build/
+*.egg-info/
+.DS_Store
