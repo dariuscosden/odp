@@ -1,5 +1,5 @@
 from flask import  current_app as app
-from server.models import User, Post
+from server.models import User, Post, Ad
 from server.database import db
 from werkzeug.security import check_password_hash, generate_password_hash
 
@@ -32,6 +32,15 @@ def populate():
         db.session.add(post1)
         db.session.add(post2)
         db.session.add(post3)
+
+    # populates ads
+    ads = Ad.query.all()
+    if not ads:
+        ad1 = Ad(id="feedAd", title='Ad 1', type="feed", content="<img src='https://sg.fiverrcdn.com/photo2s/76101161/original/729177c730c99d2eebb2da6a6e66fc332d49c512.jpg?1500125632' />")
+        ad2 = Ad(id="sidebarAd", title='Ad 2', type="sidebar", content="<b>ad2</b>")
+
+        db.session.add(ad1)
+        db.session.add(ad2)
 
     db.session.commit()
 

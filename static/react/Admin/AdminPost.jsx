@@ -33,6 +33,7 @@ class AdminPost extends React.Component {
   getPostBodyHTML() {
     var postBodyHTML = document.getElementById('postBodyQuill').childNodes[1]
       .childNodes[0].innerHTML;
+    console.log(postBodyHTML);
     return postBodyHTML;
   }
 

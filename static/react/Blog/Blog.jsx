@@ -5,12 +5,15 @@ import Soumettre from './Soumettre';
 import Feed from './Feed/Feed';
 import { SidebarLeft, SidebarRight, PostSidebarRight } from './Feed/Sidebar';
 import BlogPost from './Post/BlogPost';
+import Axios from 'axios';
+
+const axios = require('axios');
 
 // global blog component
 class Blog extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { marginTop: { marginTop: 0 } };
+    this.state = { ads: false };
   }
 
   // gets the header height
@@ -19,11 +22,22 @@ class Blog extends React.Component {
     this.setState({ marginTop: { marginTop: headerHeight } });
   };
 
+  componentWillMount = () => {
+    this.getAds();
+  };
+
+  // gets the ads from python
+  getAds = () => {
+    axios.post('/', { ads: true }).then(response => {
+      this.setState({ ads: JSON.stringify(response.data) });
+    });
+  };
+
   render() {
     return (
       <>
         <Header />
-        <div className="subHeaderContainer" style={this.state.marginTop}>
+        <div className="subHeaderContainer">
           <SubHeader />
         </div>
         <div className="backgroundContainer">
@@ -34,9 +48,10 @@ class Blog extends React.Component {
                 path="/"
                 render={() => (
                   <>
-                    <SidebarLeft />
+                    <SidebarLeft ads={this.state.ads} />
                     <Feed
                       posts={this.props.posts}
+                      ads={this.state.ads}
                       getMorePosts={this.props.getMorePosts}
                       morePostsAvailable={this.props.morePostsAvailable}
                     />
@@ -61,7 +76,7 @@ class Blog extends React.Component {
                     }
                     return (
                       <>
-                        <SidebarLeft />
+                        <SidebarLeft ads={this.state.ads} />
                         <BlogPost
                           {...props}
                           postDateCreated={post.dateCreated}
@@ -70,6 +85,7 @@ class Blog extends React.Component {
                           postTitle={post.title}
                           postBody={post.body}
                           postCategory={post.category}
+                          ads={this.state.ads}
                         />
                         <PostSidebarRight
                           posts={this.props.posts}

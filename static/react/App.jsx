@@ -100,7 +100,12 @@ class App extends React.Component {
   render() {
     return (
       <Switch>
-        <Route path="/admin" render={() => <Admin />} />
+        <Route
+          path="/admin"
+          render={() => (
+            <Admin ads={this.state.ads} updateAds={this.updateAds} />
+          )}
+        />
         <Route
           path="/"
           render={({ match }) => (

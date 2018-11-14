@@ -14,6 +14,9 @@ class Admin extends React.Component {
       error: false,
       publish: false,
 
+      // ads
+      ads: false,
+
       // posts
       perPage: 20,
       pageRequested: 1,
@@ -42,9 +45,54 @@ class Admin extends React.Component {
         // console.log(e);
       }
     }
+    this.getAds();
     this.getPosts();
     this.getUsers();
   }
+
+  // gets the ads from python
+  getAds = () => {
+    axios.post('/', { ads: true }).then(response => {
+      this.setState({ ads: JSON.stringify(response.data) });
+    });
+  };
+
+  getFeedAdHTML() {
+    var feedAdHTML = document.getElementById('feedAdTextArea').value;
+    return feedAdHTML;
+  }
+
+  getSidebarAdHTML() {
+    var sidebarAdHTML = document.getElementById('sidebarAdTextArea').value;
+    return sidebarAdHTML;
+  }
+
+  // update ads
+  updateAds = e => {
+    e.preventDefault();
+    var feedAd = this.getFeedAdHTML();
+    var sidebarAd = this.getSidebarAdHTML();
+    axios
+      .post('/adminAds', {
+        updateAds: true,
+        feedAd: feedAd,
+        sidebarAd: sidebarAd
+      })
+      .then(response => {
+        console.log(response.data);
+        this.setState({
+          ads: JSON.stringify(response.data),
+          message: {
+            type: 'success',
+            content: 'Ads have been updated'
+          },
+          publish: true
+        });
+      });
+    setTimeout(() => {
+      this.setState({ message: false });
+    }, 5000);
+  };
 
   // gets initial users from python
   getUsers = () => {
@@ -488,6 +536,9 @@ class Admin extends React.Component {
     if (this.state.user) {
       return (
         <Dashboard
+          // ads
+          ads={this.state.ads}
+          updateAds={this.updateAds}
           message={this.state.message}
           publish={this.state.publish}
           onLogout={this.handleLogout}

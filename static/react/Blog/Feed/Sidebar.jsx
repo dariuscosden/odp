@@ -8,11 +8,26 @@ class SidebarLeft extends Component {
   constructor(props) {
     super(props);
   }
+
+  insertSidebarAd = () => {
+    if (this.props.ads) {
+      const ads = JSON.parse(this.props.ads);
+      var adContent = '';
+      ads.map(ad => {
+        if (ad.type === 'sidebar') {
+          adContent = ad.content;
+        }
+      });
+    }
+    return { __html: adContent };
+  };
+
   render() {
     return (
-      <div className="sidebarContainer-left">
-        <img src="http://www.ecstudents.net/10fall/kevinpost/archive/photoshop/gif_ads/9000th-winner-animated-2.gif" />
-      </div>
+      <div
+        className="sidebarContainer-left"
+        dangerouslySetInnerHTML={this.insertSidebarAd()}
+      />
     );
   }
 }

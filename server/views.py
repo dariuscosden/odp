@@ -3,7 +3,7 @@ from flask import render_template, redirect, request, url_for, flash, session
 from werkzeug.security import check_password_hash, generate_password_hash
 from werkzeug.utils import secure_filename
 from sqlalchemy import desc, or_
-from server.models import User, Post
+from server.models import User, Post, Ad
 from server.database import db
 import json
 import datetime
@@ -69,6 +69,19 @@ def jsonifyUsers(users):
 
     return json.dumps(jsonUsers)
 
+# jsonifies ads
+def jsonifyAds(ads):
+    jsonAds = []
+
+    for ad in ads:
+        d = {}
+        d['id'] = ad.id
+        d['type'] = ad.type
+        d['content'] = ad.content
+        jsonAds.append(d)
+
+    return json.dumps(jsonAds)
+
 # renders index.html
 @app.route('/', methods=('GET', 'POST'), endpoint='home')
 @app.route('/admin', methods=('GET', 'POST'), endpoint='admin')
@@ -97,6 +110,12 @@ def index():
                     return json.dumps({'authenticated': False})
             else:
                 return json.dumps({'authenticated': False})
+
+        # ads
+        if data.get('ads'):
+            ads = Ad.query.all()
+
+            return jsonifyAds(ads)
 
         # users
         if data.get('users'):
@@ -162,6 +181,33 @@ def page_not_found(e):
     if 'admin' in request.url:
         return redirect(url_for('admin'))
     return redirect(url_for('home'))
+
+# handles the admin ads route
+@app.route('/adminAds', methods=('GET', 'POST'))
+def adminAds():
+
+    if request.method == 'POST':
+        data = request.get_json()
+
+        if data.get('updateAds'):
+            feedAdContent = data.get('feedAd')
+            sidebarAdContent = data.get('sidebarAd')
+
+            feedAd = Ad.query.filter_by(id='feedAd').first()
+            sidebarAd = Ad.query.filter_by(id='sidebarAd').first()
+
+            feedAd.content = feedAdContent
+            sidebarAd.content = sidebarAdContent
+            db.session.commit()
+
+            ads = []
+            ads.append(feedAd)
+            ads.append(sidebarAd)
+
+            return jsonifyAds(ads)
+
+    return redirect(url_for('admin'))
+            
 
 # handles the admin posts route
 @app.route('/adminPosts', methods=('GET', 'POST'))

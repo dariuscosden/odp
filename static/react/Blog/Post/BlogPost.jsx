@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import FeedAd, { PostAd } from '../Ads';
 
 class BlogPost extends Component {
   constructor(props) {
@@ -11,10 +12,24 @@ class BlogPost extends Component {
   }
 
   render() {
+    // gets ads from props
+    var jsonAds = JSON.parse(this.props.ads);
+    var adsArr = [];
+    Object.keys(jsonAds).forEach(function(key) {
+      adsArr.push(jsonAds[key]);
+    });
+
     return (
       <div className="postContainer">
+        <div className="postContainer-feedAd">
+          {adsArr.map(ad => {
+            if (ad.type === 'feed') {
+              return <PostAd adContent={ad.content} />;
+            }
+          })}
+        </div>
         <Link to="/" className="mainLink">
-          ←
+          ← Retourner
         </Link>
         <br />
         <br />

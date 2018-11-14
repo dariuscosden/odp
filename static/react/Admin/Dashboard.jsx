@@ -4,7 +4,8 @@ import { Logout } from '../Auth/Auth';
 import AdminPosts from './AdminPosts';
 import AdminPost from './AdminPost';
 import { AdminLink } from '../Blog/Links';
-import AdminUsers from '..//Auth/AdminUsers';
+import AdminUsers from './AdminUsers';
+import AdminAds from './AdminAds';
 
 // admin dashboard component
 class Dashboard extends React.Component {
@@ -26,6 +27,10 @@ class Dashboard extends React.Component {
           <AdminLink to="/admin/users">
             <i className="fas fa-user-edit" />
             User Area
+          </AdminLink>
+          <AdminLink to="/admin/ads">
+            <i className="fas fa-ad" />
+            Ads
           </AdminLink>
           <AdminLink exact to="/">
             Blog
@@ -79,6 +84,15 @@ class Dashboard extends React.Component {
                   createUser={this.props.createUser}
                   updateUser={this.props.updateUser}
                   deleteUser={this.props.deleteUser}
+                />
+              )}
+            />
+            <Route
+              path="/admin/ads"
+              render={() => (
+                <AdminAds
+                  ads={this.props.ads}
+                  updateAds={this.props.updateAds}
                 />
               )}
             />

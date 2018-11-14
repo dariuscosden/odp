@@ -40,3 +40,13 @@ class Post(db.Model):
     # represents the table
     def __repr__(self):
         return '<Post {}>'.format(self.title)
+
+# ad model
+class Ad(db.Model):
+    id = db.Column(db.String, primary_key=True)
+    title = db.Column(db.String(160))
+    type = db.Column(db.String(80))
+    content = db.Column(db.String(1000))
+    
+    def __repr__(self):
+        return '<Ad: {}>'.format(self.title)
