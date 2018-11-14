@@ -5,9 +5,6 @@ __pycache__/
 
 # flask
 .flaskenv
-config.py
-
-# instance folder
 instance/
 
 # react
