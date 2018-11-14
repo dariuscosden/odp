@@ -19,7 +19,7 @@ build/
 config.py
 
 .vscode/
-.code-workspace
+*.code-workspace
 
 checklist.txt
 notes.txt
