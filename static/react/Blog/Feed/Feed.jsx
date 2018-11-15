@@ -29,7 +29,22 @@ class Feed extends React.Component {
           if (post.id % 4 === 0) {
             return adsArr.map(ad => {
               if (ad.type == 'feed') {
-                return <FeedAd key={ad.id} adContent={ad.content} />;
+                return (
+                  <>
+                    <FeedAd key={ad.id} adContent={ad.content} />
+                    <FeedPost
+                      key={post.id}
+                      postDateCreated={post.dateCreated}
+                      postSlug={post.slug}
+                      postTitle={post.title}
+                      postExcerp={post.excerp}
+                      postCategory={post.category}
+                      postImage={post.image}
+                      ad={post.ad}
+                      adContent={post.adContent}
+                    />
+                  </>
+                );
               }
             });
           }

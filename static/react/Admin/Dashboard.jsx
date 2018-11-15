@@ -57,6 +57,15 @@ class Dashboard extends React.Component {
             </div>
           </div>
           <hr />
+          {this.props.showInsertDummyData ? (
+            <a
+              href=""
+              className="mainLink"
+              onClick={this.props.insertDummyData}
+            >
+              Insert Dummy Data
+            </a>
+          ) : null}
           <Switch>
             <Route
               path="/admin/posts"

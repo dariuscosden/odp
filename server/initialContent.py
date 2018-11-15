@@ -1,21 +1,10 @@
 from flask import  current_app as app
-from server.models import User, Post, Ad
+from server.models import Post, User, Ad
 from server.database import db
-from werkzeug.security import check_password_hash, generate_password_hash
 
-# populates database
-def populate():
-
-    # populates users
-    users = User.query.all()
-    if not users:
-        user = User(username='admin', password=generate_password_hash('123'), email='admin@ouatedephoque.ca', category='administrator')
-        db.session.add(user)
-    else:
-        user = User.query.filter_by(username='admin').first()
-
-
-    # populates posts
+# populates dummy posts
+def insertDummyPosts(userID):
+    user = User.query.filter_by(id=userID).first()
     posts = Post.query.all()
     if not posts:
         post1 = Post(title='Post 1', body='Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', dateCreated='2018-10-27', user=user, category='Nouvelles', image="/dist/images/post1.jpg")
@@ -32,14 +21,17 @@ def populate():
         db.session.add(post2)
         db.session.add(post3)
 
-    # populates ads
+        db.session.commit()
+
+# populates ads
+def insertAds():
     ads = Ad.query.all()
     if not ads:
-        ad1 = Ad(id="feedAd", title='Ad 1', type="feed", content="<img src='https://sg.fiverrcdn.com/photo2s/76101161/original/729177c730c99d2eebb2da6a6e66fc332d49c512.jpg?1500125632' />")
-        ad2 = Ad(id="sidebarAd", title='Ad 2', type="sidebar", content="<b>ad2</b>")
+        ad1 = Ad(id="feedAd", title='Ad 1', type="feed", content="Insert HTML Here")
+        ad2 = Ad(id="sidebarAd", title='Ad 2', type="sidebar", content="Insert HTML Here")
 
         db.session.add(ad1)
         db.session.add(ad2)
 
-    db.session.commit()
+        db.session.commit()
 

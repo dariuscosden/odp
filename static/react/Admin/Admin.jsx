@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Login from '../Auth/Auth';
+import Login, { InitializeApp } from '../Auth/Auth';
 import Dashboard from './Dashboard';
 
 const axios = require('axios');
@@ -9,6 +9,8 @@ class Admin extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      initialized: false,
+      showInsertDummyData: false,
       message: false,
       user: false,
       error: false,
@@ -45,10 +47,100 @@ class Admin extends React.Component {
         // console.log(e);
       }
     }
+    this.checkForInitialization();
     this.getAds();
     this.getPosts();
     this.getUsers();
+    this.checkForDummyData();
   }
+
+  // handles initialization of app
+  checkForInitialization = () => {
+    axios.post('/admin', { initialization: true }).then(response => {
+      if (response.data.initialized) {
+        this.setState({ initialized: true });
+      }
+    });
+  };
+
+  // checks for dummy data
+  checkForDummyData = () => {
+    axios.post('/admin', { checkForDummyData: true }).then(response => {
+      if (!response.data.checkForDummyData) {
+        this.setState({ showInsertDummyData: true });
+      }
+    });
+  };
+
+  // initializes the backend account
+  initializeBackEnd = e => {
+    e.preventDefault();
+    const initializationFormInput = {};
+    e.target.childNodes.forEach(event => {
+      if (event.tagName === 'INPUT' && event.type != 'submit') {
+        initializationFormInput[event.name] = event.value;
+        event.value = null;
+      }
+    });
+
+    // sends data to python
+    axios({
+      method: 'post',
+      url: '/admin',
+      data: { initializationFormInput }
+    }).then(response => {
+      if (response.data.initialized) {
+        this.setState({
+          initialized: true,
+          user: {
+            authenticated: true,
+            id: response.data.userID,
+            username: response.data.username
+          },
+          error: false,
+          message: {
+            type: 'success',
+            content: 'You have successfully initialized the application'
+          }
+        });
+        localStorage.setItem('userState', JSON.stringify(this.state.user));
+        this.getUsers();
+      } else {
+        this.setState({
+          error: {
+            type: 'login',
+            message: 'Something went wrong while initializing the account'
+          }
+        });
+      }
+      setTimeout(() => {
+        this.setState({ message: false });
+      }, 5000);
+    });
+  };
+
+  // inserts dummy data
+  insertDummyData = e => {
+    e.preventDefault();
+    axios
+      .post('/admin', { insertDummyData: true, userID: this.state.user.id })
+      .then(response => {
+        if (response.data.insertDummyData) {
+          this.getPosts();
+          this.setState({
+            showInsertDummyData: false,
+            publish: true,
+            message: {
+              type: 'success',
+              content: 'Dummy data has been successfully inserted'
+            }
+          });
+        }
+        setTimeout(() => {
+          this.setState({ message: false });
+        }, 5000);
+      });
+  };
 
   // gets the ads from python
   getAds = () => {
@@ -227,15 +319,23 @@ class Admin extends React.Component {
         userID: userID
       })
       .then(response => {
-        console.log(response.data);
-        this.getUsers();
-        this.setState({
-          message: {
-            type: 'success',
-            content: 'User has been successfully deleted'
-          },
-          publish: true
-        });
+        if (response.data.userDeleted) {
+          this.getUsers();
+          this.setState({
+            message: {
+              type: 'success',
+              content: 'User has been successfully deleted'
+            },
+            publish: true
+          });
+        } else {
+          this.setState({
+            message: {
+              type: 'error',
+              content: 'Cannot delete the last remaining account'
+            }
+          });
+        }
         setTimeout(() => {
           this.setState({ message: false });
         }, 5000);
@@ -462,7 +562,6 @@ class Admin extends React.Component {
     })
       .then(response => {
         const user = response.data;
-        console.log(response.data);
         if (user.authenticated) {
           this.setState({
             user: {
@@ -537,6 +636,9 @@ class Admin extends React.Component {
     if (this.state.user) {
       return (
         <Dashboard
+          // dummy data
+          insertDummyData={this.insertDummyData}
+          showInsertDummyData={this.state.showInsertDummyData}
           // ads
           ads={this.state.ads}
           updateAds={this.updateAds}
@@ -561,11 +663,16 @@ class Admin extends React.Component {
         />
       );
     } else {
-      return (
-        <>
-          <Login error={this.state.error} onSubmit={this.handleLogin} />
-        </>
-      );
+      if (this.state.initialized) {
+        return <Login error={this.state.error} onSubmit={this.handleLogin} />;
+      } else {
+        return (
+          <InitializeApp
+            error={this.state.error}
+            onSubmit={this.initializeBackEnd}
+          />
+        );
+      }
     }
   }
 }

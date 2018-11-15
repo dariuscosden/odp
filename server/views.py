@@ -5,6 +5,7 @@ from werkzeug.utils import secure_filename
 from sqlalchemy import desc, or_
 from server.models import User, Post, Ad
 from server.database import db
+from server import initialContent
 import json
 import datetime
 import os
@@ -91,6 +92,25 @@ def index():
     if request.method == 'POST':
         data = request.get_json()
 
+        # checks initialization
+        if data.get('initialization'):
+            users = User.query.all()
+            if users:
+                return json.dumps({'initialized': True})
+            else:
+                return json.dumps({'initialized': False})
+
+        # handles initialization
+        if data.get('initializationFormInput'):
+            _username = data['initializationFormInput'].get('username')
+            _password = data['initializationFormInput'].get('password')
+
+            user = User(username=_username, password=generate_password_hash(_password), category='administrator')
+            db.session.add(user)
+            db.session.commit()
+
+            return json.dumps({'initialized': True, 'userID': user.id, 'username': user.username})
+
         # handles login
         if data.get('loginFormInput'):
             _username = data['loginFormInput'].get('username')
@@ -109,6 +129,19 @@ def index():
                     return json.dumps({'authenticated': False})
             else:
                 return json.dumps({'authenticated': False})
+
+        # inserts dummy data
+        if data.get('insertDummyData'):
+            userID = data.get('userID')
+            initialContent.insertDummyPosts(userID)
+
+            return json.dumps({"insertDummyData": True})
+
+        # checks for dummy data
+        if data.get('checkForDummyData'):
+            posts = Post.query.all()
+            if posts:
+                return json.dumps({'checkForDummyData': True})
 
         # ads
         if data.get('ads'):
@@ -325,16 +358,16 @@ def adminUsers():
             userID = data.get('userID')
             user = User.query.filter_by(id=userID).first()
             posts = Post.query.filter_by(user=user).all()
+            userCount = User.query.count()
 
-            # deletes all post from user
-            for post in posts:
-                db.session.delete(post)
-
-            db.session.delete(user)
-
-            db.session.commit()
-
-            return json.dumps({"userDeleted": True})
+            if userCount > 1:
+                for post in posts:
+                    db.session.delete(post)
+                db.session.delete(user)
+                db.session.commit()
+                return json.dumps({"userDeleted": True})
+            else:
+                return json.dumps({"userDeleted": False})
 
         # handles the update user
         if data.get('updateUser'):

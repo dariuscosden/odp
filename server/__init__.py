@@ -1,7 +1,7 @@
 from flask import Flask
 from server.database import db
 from server.models import User
-from server import testData
+from server import initialContent
 from pathlib import Path
 import os
 
@@ -35,6 +35,6 @@ def create_app():
 
     # populates test database entries
     with app.app_context():
-        testData.populate()
+        initialContent.insertAds()
 
     return app
