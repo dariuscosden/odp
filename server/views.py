@@ -96,9 +96,9 @@ def index():
             _username = data['loginFormInput'].get('username')
             _password = data['loginFormInput'].get('password')
 
-            return json.dumps({"username": _username, "password": _password})
-
             user = User.query.filter_by(username=_username).first()
+
+            return json.dumps({'user': user.username})
 
             if user:
                 if check_password_hash(user.password, _password):
