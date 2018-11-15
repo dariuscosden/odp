@@ -98,10 +98,9 @@ def index():
 
             user = User.query.filter_by(username=_username).first()
 
-            return json.dumps({'user': user.username})
-
             if user:
                 if check_password_hash(user.password, _password):
+                    return json.dumps({'user': user.username})
                     session['user_id'] = user.id
                     return json.dumps({
                         'authenticated': True,
