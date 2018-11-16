@@ -26,7 +26,7 @@ class Feed extends React.Component {
     return (
       <div className="feedContainer-flex">
         {postsArr.map(post => {
-          if (post.id % 4 === 0) {
+          if (post.id % 2 === 0) {
             return adsArr.map(ad => {
               if (ad.type == 'feed') {
                 return (

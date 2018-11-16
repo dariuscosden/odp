@@ -14,7 +14,7 @@ import os
 # favicon
 @app.route('/favicon.ico')
 def favicon():
-    return url_for('static', filename='favicon.ico')
+    return url_for('static', filename='/img/favicon.jpg')
 
  # jsonifies posts
 def jsonifyPosts(posts):

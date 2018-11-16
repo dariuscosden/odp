@@ -346,7 +346,8 @@ class PostBodyEditor extends Component {
 
     var videoURLInput = document.createElement('input');
     videoURLInput.type = 'text';
-    videoURLInput.value = 'enter video url';
+    videoURLInput.value =
+      '<div class="facebookContainer">--IFRAME HTML HERE--</div>';
 
     var videoURLInputSubmit = document.createElement('input');
     videoURLInputSubmit.type = 'submit';

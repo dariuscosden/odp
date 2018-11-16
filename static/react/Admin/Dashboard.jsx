@@ -56,7 +56,7 @@ class Dashboard extends React.Component {
               </div>
               <div className="adminDashboardHeader-menuItem">
                 {this.props.publish ? (
-                  <a href="/admin" className="accentColor">
+                  <a href="/admin" className="mainLink">
                     Publish
                   </a>
                 ) : (
