@@ -44,6 +44,17 @@ class Dashboard extends React.Component {
             </div>
             <div className="adminDashboardHeader-menuFlex">
               <div className="adminDashboardHeader-menuItem">
+                {this.props.showInsertDummyData ? (
+                  <a
+                    href=""
+                    className="mainLink"
+                    onClick={this.props.insertDummyData}
+                  >
+                    Insert Dummy Data
+                  </a>
+                ) : null}
+              </div>
+              <div className="adminDashboardHeader-menuItem">
                 {this.props.publish ? (
                   <a href="/admin" className="accentColor">
                     Publish
@@ -57,15 +68,6 @@ class Dashboard extends React.Component {
             </div>
           </div>
           <hr />
-          {this.props.showInsertDummyData ? (
-            <a
-              href=""
-              className="mainLink"
-              onClick={this.props.insertDummyData}
-            >
-              Insert Dummy Data
-            </a>
-          ) : null}
           <Switch>
             <Route
               path="/admin/posts"

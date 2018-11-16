@@ -24,7 +24,7 @@ class BlogPost extends Component {
         <div className="postContainer-feedAd">
           {adsArr.map(ad => {
             if (ad.type === 'feed') {
-              return <PostAd adContent={ad.content} />;
+              return <PostAd key={ad.id} adContent={ad.content} />;
             }
           })}
         </div>

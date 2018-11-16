@@ -33,7 +33,6 @@ class AdminPost extends React.Component {
   getPostBodyHTML() {
     var postBodyHTML = document.getElementById('postBodyQuill').childNodes[1]
       .childNodes[0].innerHTML;
-    console.log(postBodyHTML);
     return postBodyHTML;
   }
 
@@ -186,6 +185,65 @@ const Quill = ReactQuill.Quill;
 var Block = Quill.import('blots/block');
 Block.tagName = 'div';
 Quill.register(Block);
+let BlockEmbed = Quill.import('blots/block/embed');
+
+// creates the video blot
+class VideoBlot extends BlockEmbed {
+  static create(url) {
+    let node = super.create();
+    node.setAttribute('src', url);
+    node.setAttribute('frameborder', '0');
+    node.setAttribute('allowfullscreen', true);
+    return node;
+  }
+
+  static formats(node) {
+    let format = {};
+    if (node.hasAttribute('height')) {
+      format.height = node.getAttribute('height');
+    }
+    if (node.hasAttribute('width')) {
+      format.width = node.getAttribute('width');
+    }
+    return format;
+  }
+
+  static value(node) {
+    return node.getAttribute('src');
+  }
+
+  format(name, value) {
+    if (name === 'height' || name === 'width') {
+      if (value) {
+        this.domNode.setAttribute(name, value);
+      } else {
+        this.domNode.removeAttribute(name, value);
+      }
+    } else {
+      super.format(name, value);
+    }
+  }
+}
+VideoBlot.blotName = 'video';
+VideoBlot.tagName = 'iframe';
+
+Quill.register(VideoBlot);
+
+class LinkBlot extends BlockEmbed {
+  static create(value) {
+    let node = super.create();
+    node.setAttribute('href', value);
+    return node;
+  }
+
+  static formats(node) {
+    return node.getAttribute('href');
+  }
+}
+LinkBlot.blotName = 'fancylink';
+LinkBlot.tagName = 'a';
+
+Quill.register(LinkBlot);
 
 class PostTitleEditor extends Component {
   constructor(props) {
@@ -279,6 +337,34 @@ class PostBodyEditor extends Component {
     fileInput.click();
   }
 
+  // handles image upload in rich rext editor
+  videoHandler() {
+    let quill = this.reactQuill.current.editor;
+    let range = quill.getSelection(true);
+
+    var videoInputDiv = document.getElementById('videoInputDiv');
+
+    var videoURLInput = document.createElement('input');
+    videoURLInput.type = 'text';
+    videoURLInput.value = 'enter video url';
+
+    var videoURLInputSubmit = document.createElement('input');
+    videoURLInputSubmit.type = 'submit';
+
+    videoInputDiv.appendChild(videoURLInput);
+    videoInputDiv.appendChild(videoURLInputSubmit);
+
+    videoURLInputSubmit.onclick = function() {
+      var videoURL = videoURLInput.value;
+      // quill.insertEmbed(range.index + 1, 'video', videoURL, Quill.sources.USER);
+      // quill.insertEmbed(range.index, 'fancylink', videoURL, Quill.sources.USER);
+      quill.clipboard.dangerouslyPasteHTML(range.index, videoURL);
+      quill.setSelection(range.index + 1, Quill.sources.SILENT);
+
+      videoInputDiv.innerHTML = '';
+    };
+  }
+
   modules = {
     toolbar: {
       container: [
@@ -291,11 +377,12 @@ class PostBodyEditor extends Component {
           { indent: '-1' },
           { indent: '+1' }
         ],
-        ['link', 'image'],
+        ['link', 'image', 'video'],
         ['clean']
       ],
       handlers: {
-        image: this.imageHandler.bind(this)
+        image: this.imageHandler.bind(this),
+        video: this.videoHandler.bind(this)
       }
     }
   };
@@ -311,6 +398,7 @@ class PostBodyEditor extends Component {
     'bullet',
     'indent',
     'link',
+    'video',
     'image',
     'align',
     'script'
@@ -328,18 +416,21 @@ class PostBodyEditor extends Component {
 
   render() {
     return (
-      <ReactQuill
-        ref={this.reactQuill}
-        id="postBodyQuill"
-        theme="snow"
-        modules={this.modules}
-        formats={this.formats}
-        defaultValue={this.props.postBody}
-        imageHandler={this.imageHandler}
-        onChange={(content, delta, source, editor) => {
-          this.handleEditedText();
-        }}
-      />
+      <>
+        <div id="videoInputDiv" className="ql-tooltip ql-editing" />
+        <ReactQuill
+          ref={this.reactQuill}
+          id="postBodyQuill"
+          theme="snow"
+          modules={this.modules}
+          formats={this.formats}
+          defaultValue={this.props.postBody}
+          imageHandler={this.imageHandler}
+          onChange={(content, delta, source, editor) => {
+            this.handleEditedText();
+          }}
+        />
+      </>
     );
   }
 }

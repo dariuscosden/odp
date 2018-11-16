@@ -265,6 +265,9 @@ input[type='password'] {
   justify-content: flex-end;
   align-items: center;
 }
+.adminDashboardHeader-menuItem {
+  padding-left: 10px;
+}
 
 /* admin posts */
 
@@ -584,6 +587,9 @@ input[type='password'] {
   text-decoration: none;
   color: black;
 }
+.feedPostContainer-body iframe {
+  width: 100%;
+}
 .sidebarContainer {
   width: 20%;
   padding: 20px;
@@ -651,6 +657,10 @@ input[type='password'] {
 }
 .postContainer-body img {
   width: 100%;
+}
+.postContainer-body iframe {
+  width: 100%;
+  height: 600px;
 }
 
 /* large devices */
